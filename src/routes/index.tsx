@@ -285,8 +285,8 @@ function TransactionTitans() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="pointer-events-none fixed inset-0 grid-world energy-grid opacity-40" />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_50%_0%,oklch(0.38_0.09_205/18%),transparent_55%)]" />
+      <div className="pointer-events-none fixed inset-0 grid-world energy-grid opacity-25" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_50%_0%,oklch(0.28_0.07_200/25%),transparent_65%)]" />
       <header className="relative z-20 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-md sm:px-8">
         <button onClick={() => setScreen("hub")} className="flex items-center gap-3 text-left" aria-label="Go to Valuation Grid">
           <div className="flex size-9 items-center justify-center border border-energy/50 bg-accent/70 text-energy"><Shield className="size-5" /></div>
