@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { HeroFigure, GridMap } from "@/components/game-ui";
 import { InteractiveTitanGuide } from "@/components/interactive-titan-guide";
+import { voice } from "@/lib/voice-narrator";
 import {
   arenaQuestions, levels, premiumFormula, transactionValueFormula, universeFactors, valuationSteps,
   type GameLevel, type GameQuestion,
@@ -182,6 +183,11 @@ function TransactionTitans() {
     setAnswered(correct);
     setStreak((value) => correct ? value + 1 : 0);
     playTone(correct ? "correct" : "wrong");
+    if (correct) {
+      voice.speak("Excellent! That is the correct valuation answer.", { character: "commander" });
+    } else {
+      voice.speak("Not quite, Commander. Review the analysis and try once more.", { character: "commander" });
+    }
   };
   const advanceQuestion = () => {
     if (!currentQuestion || answered === null) return;

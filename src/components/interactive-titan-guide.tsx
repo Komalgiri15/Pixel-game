@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Volume2, VolumeX, Sparkles } from "lucide-react";
 import { levels } from "@/data/game-content";
+import { voice } from "@/lib/voice-narrator";
 
 interface StepGuide {
   num: string;
@@ -7,8 +9,10 @@ interface StepGuide {
   label: string;
   subtitle: string;
   details: string;
+  voiceLine: string;
   titanName: string;
   titanRole: string;
+  character: "scout" | "shaper" | "master" | "guardian";
   avatarImg: string;
   accentColor: string; // teal, coral, peach
   borderColor: string;
@@ -23,8 +27,10 @@ const GUIDE_STEPS: StepGuide[] = [
     label: "WATCH",
     subtitle: "Video briefings per sector",
     details: "Watch field briefings led by Comp Scout to identify comparable universes & control premiums.",
+    voiceLine: "Greetings Commander! I am Comp Scout. Watch our sector briefing to identify comparable universes and lock in the control premium.",
     titanName: "Comp Scout",
     titanRole: "Valuation Comps Specialist",
+    character: "scout",
     avatarImg: "/avatars/comp_scout_full.png",
     accentColor: "#60e1d5",
     borderColor: "border-[#60e1d5]",
@@ -37,8 +43,10 @@ const GUIDE_STEPS: StepGuide[] = [
     label: "ANSWER",
     subtitle: "Knowledge challenges",
     details: "Solve tactical M&A questions alongside Deal Shaper. Distinguish offer values and deal structures.",
+    voiceLine: "Deal Shaper online. Prepare for tactical challenges to distinguish offer value, transaction value, and consideration structures.",
     titanName: "Deal Shaper",
     titanRole: "Deal Consideration Titan",
+    character: "shaper",
     avatarImg: "/avatars/deal_shaper_full.png",
     accentColor: "#ff6164",
     borderColor: "border-[#ff6164]",
@@ -51,8 +59,10 @@ const GUIDE_STEPS: StepGuide[] = [
     label: "POWER UP",
     subtitle: "Earn sector power badges",
     details: "Master LTM calculations & multiples ranges with Multiple Master to forge your valuation badge.",
+    voiceLine: "I am Multiple Master. Calculate latest twelve months multiples, analyze valuation spreads, and earn your sector power badge.",
     titanName: "Multiple Master",
     titanRole: "Multiples & Metrics Guru",
+    character: "master",
     avatarImg: "/avatars/multiple_master_full.png",
     accentColor: "#ffac88",
     borderColor: "border-[#ffac88]",
@@ -65,8 +75,10 @@ const GUIDE_STEPS: StepGuide[] = [
     label: "ARENA",
     subtitle: "Unlock Final Mastery",
     details: "Join Source Guardian to authenticate filing sources, connect all 4 sectors, and claim your Certificate!",
+    voiceLine: "Source Guardian standing guard. Authenticate public filings, reconnect the valuation grid, and claim your Commander Certificate of Mastery!",
     titanName: "Source Guardian",
     titanRole: "Filing & Source Protector",
+    character: "guardian",
     avatarImg: "/avatars/source_guardian_full.png",
     accentColor: "#60e1d5",
     borderColor: "border-[#60e1d5]",
@@ -76,9 +88,7 @@ const GUIDE_STEPS: StepGuide[] = [
 ];
 
 /**
- * Interactive Game Guide Comic / Tutorial Strip
- * Inspired by mobile game dialogue tutorials (like Cookie Run Kingdom / RPGs):
- * Features the Titan avatars standing with character speech bubbles and interactive step cards.
+ * Interactive Game Guide with Character Voiceover Narrations
  */
 export function InteractiveTitanGuide({
   onSelectSector,
@@ -86,7 +96,38 @@ export function InteractiveTitanGuide({
   onSelectSector?: (index: number) => void;
 }) {
   const [activeStep, setActiveStep] = useState(0);
+  const [voiceActive, setVoiceActive] = useState(() => voice.isVoiceEnabled());
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
   const current = GUIDE_STEPS[activeStep] ?? GUIDE_STEPS[0]!;
+
+  useEffect(() => {
+    return voice.subscribe((speaking) => setIsSpeaking(speaking));
+  }, []);
+
+  const handleStepSelect = (idx: number, playAudio: boolean = true) => {
+    setActiveStep(idx);
+    const step = GUIDE_STEPS[idx];
+    if (step && playAudio && voiceActive) {
+      voice.speak(step.voiceLine, { character: step.character });
+    }
+  };
+
+  const toggleVoiceOver = () => {
+    const next = voice.toggleVoice();
+    setVoiceActive(next);
+    if (next) {
+      voice.speak(current.voiceLine, { character: current.character });
+    }
+  };
+
+  const playCurrentVoice = () => {
+    if (!voiceActive) {
+      voice.setVoiceEnabled(true);
+      setVoiceActive(true);
+    }
+    voice.speak(current.voiceLine, { character: current.character });
+  };
 
   return (
     <div className="relative rounded-3xl border-2 border-[#00959a] bg-gradient-to-b from-[#02373d]/95 via-[#034a52]/90 to-[#02373d]/95 p-5 sm:p-7 shadow-[0_15px_45px_rgba(0,0,0,0.5)] overflow-hidden">
@@ -94,7 +135,7 @@ export function InteractiveTitanGuide({
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#00959a]/15 via-transparent to-transparent pointer-events-none" />
 
       {/* Top Title Banner */}
-      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#00959a]/30 pb-4 mb-6">
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#00959a]/30 pb-4 mb-6">
         <div>
           <div className="inline-flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-[.22em] text-[#60e1d5]">
             <span className="size-2 rounded-full bg-[#60e1d5] animate-ping" />
@@ -108,14 +149,29 @@ export function InteractiveTitanGuide({
           </p>
         </div>
 
-        {/* Step Indicator Badges */}
-        <div className="flex items-center gap-1.5 shrink-0 pt-2 sm:pt-0">
+        {/* Voiceover Control & Step Badges */}
+        <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 sm:pt-0">
+          {/* Voiceover On/Off Toggle Button */}
+          <button
+            onClick={toggleVoiceOver}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+              voiceActive
+                ? "border-[#60e1d5] bg-[#00959a] text-white shadow-[0_0_15px_rgba(96,225,213,0.35)]"
+                : "border-[#034a52] bg-[#02373d] text-[#defcf9]/50 hover:text-white"
+            }`}
+            title="Toggle Titan Voiceover Narration"
+          >
+            {voiceActive ? <Volume2 className="size-3.5 text-white animate-pulse" /> : <VolumeX className="size-3.5" />}
+            <span>{voiceActive ? "Voice On" : "Voice Off"}</span>
+          </button>
+
+          {/* Step Badges */}
           {GUIDE_STEPS.map((s, idx) => {
             const isActive = idx === activeStep;
             return (
               <button
                 key={s.num}
-                onClick={() => setActiveStep(idx)}
+                onClick={() => handleStepSelect(idx)}
                 className={`px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
                   isActive
                     ? "border-white bg-[#00959a] text-white scale-105 shadow-[0_0_15px_rgba(96,225,213,0.4)]"
@@ -143,7 +199,9 @@ export function InteractiveTitanGuide({
             <img
               src={current.avatarImg}
               alt={current.titanName}
-              className="relative h-full w-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)]"
+              className={`relative h-full w-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)] transition-transform duration-300 ${
+                isSpeaking ? "scale-105" : "scale-100"
+              }`}
             />
           </div>
 
@@ -161,7 +219,7 @@ export function InteractiveTitanGuide({
           </div>
         </div>
 
-        {/* Right: RPG Speech Bubble with Comic Tail & Gesture Cue */}
+        {/* Right: RPG Speech Bubble with Comic Tail & Audio Play Button */}
         <div className="relative">
           {/* Speech Bubble Card */}
           <div
@@ -196,11 +254,21 @@ export function InteractiveTitanGuide({
                 </div>
               </div>
 
-              {/* Hand Pointer Cue */}
-              <div className="flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-lg bg-[#02373d]/80 border border-white/20 text-white">
-                <span className="text-base animate-bounce">👆</span>
-                <span className="text-[#defcf9]">Mission Step</span>
-              </div>
+              {/* Character Voiceover Trigger Pill */}
+              <button
+                onClick={playCurrentVoice}
+                className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-xl border border-white/25 bg-[#02373d]/90 text-white hover:bg-[#00959a] hover:border-white transition-all shadow-md group"
+                title="Play Titan Voice"
+              >
+                <Volume2
+                  className={`size-4 text-[#60e1d5] group-hover:text-white ${
+                    isSpeaking ? "animate-bounce" : ""
+                  }`}
+                />
+                <span className="font-semibold font-sans">
+                  {isSpeaking ? "Speaking…" : "Hear Titan"}
+                </span>
+              </button>
             </div>
 
             {/* Dialogue / Instructional Text */}
@@ -213,8 +281,8 @@ export function InteractiveTitanGuide({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() =>
-                    setActiveStep(
-                      (prev) => (prev - 1 + GUIDE_STEPS.length) % GUIDE_STEPS.length
+                    handleStepSelect(
+                      (activeStep - 1 + GUIDE_STEPS.length) % GUIDE_STEPS.length
                     )
                   }
                   className="px-3 py-1.5 rounded-lg border border-[#00959a] bg-[#02373d] text-white text-xs font-bold hover:bg-[#00959a] transition-colors"
@@ -223,7 +291,7 @@ export function InteractiveTitanGuide({
                 </button>
                 <button
                   onClick={() =>
-                    setActiveStep((prev) => (prev + 1) % GUIDE_STEPS.length)
+                    handleStepSelect((activeStep + 1) % GUIDE_STEPS.length)
                   }
                   className="px-3 py-1.5 rounded-lg border border-[#00959a] bg-[#02373d] text-white text-xs font-bold hover:bg-[#00959a] transition-colors"
                 >
@@ -253,7 +321,7 @@ export function InteractiveTitanGuide({
           return (
             <button
               key={step.num}
-              onClick={() => setActiveStep(idx)}
+              onClick={() => handleStepSelect(idx)}
               className={`p-3.5 rounded-2xl border-2 text-left transition-all duration-200 relative overflow-hidden group ${
                 isSelected
                   ? "border-white bg-[#034a52] shadow-xl scale-[1.02]"
