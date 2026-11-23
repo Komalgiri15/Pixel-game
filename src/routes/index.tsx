@@ -319,27 +319,135 @@ function TransactionTitans() {
 }
 
 function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { hasProgress: boolean; completedCount: number; onStart: () => void; onContinue: () => void }) {
+  const [hoveredTitan, setHoveredTitan] = useState<number>(0);
+  const activeTitan = levels[hoveredTitan] ?? levels[0]!;
+
   return (
-    <section className="sweep-in grid min-h-[calc(100vh-130px)] items-center gap-6 lg:grid-cols-[1.04fr_.96fr]">
-      <div className="relative z-10 max-w-2xl py-6 sm:py-10">
-        <div className="mb-5 inline-flex items-center gap-2 border-l-2 border-primary px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.2em] text-primary"><span className="size-1.5 animate-pulse rounded-full bg-primary" />Operation: Restore the Grid</div>
-        <h1 className="display-font max-w-3xl text-4xl font-extrabold leading-[1.06] sm:text-6xl lg:text-7xl">Transaction<br /><span className="text-energy">Titans</span><span className="text-primary">:</span><br /><span className="text-2xl font-semibold text-foreground/80 sm:text-4xl">The Valuation Force</span></h1>
-        <p className="mt-5 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">The Valuation Grid has fallen dark. Four sectors. Four Titans. One Commander needed to restore the force.</p>
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-muted-foreground"><span className="border border-border bg-card/70 px-3 py-2">Watch</span><ChevronRight className="size-3" /><span className="border border-border bg-card/70 px-3 py-2">Answer</span><ChevronRight className="size-3" /><span className="border border-border bg-card/70 px-3 py-2">Power up</span><ChevronRight className="size-3" /><span className="border border-border bg-card/70 px-3 py-2">Advance</span></div>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Button onClick={onStart} className="h-12 gap-3 rounded-sm px-6 text-xs font-bold uppercase tracking-[.13em] shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_28%,transparent)]"><Sparkles className="size-4" />{hasProgress ? "Start Mission" : "Start Mission"}<ArrowRight className="size-4" /></Button>
-          {hasProgress && <Button variant="outline" onClick={onContinue} className="h-12 rounded-sm px-5 text-xs font-bold uppercase tracking-[.13em]">Continue · {completedCount}/4 sectors</Button>}
+    <section className="sweep-in grid min-h-[calc(100vh-130px)] items-center gap-8 lg:grid-cols-[1fr_1.1fr] py-6">
+      <div className="relative z-10 max-w-xl py-4 space-y-6">
+        <div className="inline-flex items-center gap-2 border-l-2 border-primary px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[.2em] text-[#60e1d5]">
+          <span className="size-2 animate-pulse rounded-full bg-[#60e1d5]" />
+          Operation: Restore the Grid
         </div>
-        <div className="mt-9 flex items-center gap-3 text-xs text-muted-foreground"><Headphones className="size-4 text-energy" />Sound on · Synthesized game audio</div>
+
+        <h1 className="display-font text-4xl sm:text-6xl font-extrabold leading-[1.08] text-white">
+          Transaction<br />
+          <span className="text-[#60e1d5]">Titans</span>
+          <span className="text-[#ff6164]">:</span><br />
+          <span className="text-xl sm:text-3xl font-semibold text-[#defcf9]/80 font-sans">
+            The Valuation Force
+          </span>
+        </h1>
+
+        <p className="text-sm sm:text-base leading-relaxed text-[#defcf9]/70">
+          The Valuation Grid has fallen dark. Four sectors. Four Titans. Choose your path, master M&A deal valuation through video briefings, and light the Core.
+        </p>
+
+        {/* Interactive Steps Cues */}
+        <div className="grid grid-cols-4 gap-2 text-center text-xs">
+          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+            <span className="text-base block mb-0.5">📹</span>
+            <span className="text-[10px] font-mono uppercase text-[#60e1d5] font-bold">Watch</span>
+          </div>
+          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+            <span className="text-base block mb-0.5">👆</span>
+            <span className="text-[10px] font-mono uppercase text-[#ff6164] font-bold">Answer</span>
+          </div>
+          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+            <span className="text-base block mb-0.5">⚡</span>
+            <span className="text-[10px] font-mono uppercase text-[#ffac88] font-bold">Power Up</span>
+          </div>
+          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+            <span className="text-base block mb-0.5">🏆</span>
+            <span className="text-[10px] font-mono uppercase text-[#60e1d5] font-bold">Arena</span>
+          </div>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex flex-wrap gap-3 pt-2">
+          <Button
+            onClick={onStart}
+            className="h-12 px-7 rounded-xl bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#60e1d5]/25 gap-2"
+          >
+            <Sparkles className="size-4" />
+            {hasProgress ? "Deploy to Mission" : "Start Mission"}
+            <ArrowRight className="size-4" />
+          </Button>
+
+          {hasProgress && (
+            <Button
+              variant="outline"
+              onClick={onContinue}
+              className="h-12 px-5 rounded-xl border-[#00959a] text-[#defcf9] hover:bg-[#034a52] text-xs font-bold uppercase tracking-wider"
+            >
+              Resume Grid · {completedCount}/4 Restored
+            </Button>
+          )}
+
+          <Link
+            to="/minimal"
+            className="h-12 px-5 rounded-xl border border-[#ff6164]/60 bg-[#ff6164]/10 hover:bg-[#ff6164]/20 text-[#ff6164] flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-all"
+          >
+            <span>🎮 Minimal Edition</span>
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-3 text-xs text-[#defcf9]/60">
+          <Headphones className="size-4 text-[#60e1d5]" />
+          <span>Interactive sound effects & hand gesture controls enabled</span>
+        </div>
       </div>
-      <div className="relative flex min-h-[390px] items-center justify-center sm:min-h-[510px]">
-        <div className="absolute h-[84%] w-[84%] rounded-full border border-energy/20" />
-        <div className="absolute h-[67%] w-[67%] rounded-full border border-dashed border-primary/25" />
-        <div className="absolute inset-0 grid-world opacity-40" />
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 520 520" aria-hidden="true"><path d="M260 30 454 145v230L260 490 66 375V145z" fill="none" stroke="currentColor" strokeOpacity=".24" strokeWidth="1" /><path d="M260 80 410 166v188L260 440 110 354V166z" fill="none" stroke="currentColor" strokeOpacity=".14" strokeWidth="1" strokeDasharray="5 8" /><path d="M260 30v460M66 145l388 230M454 145 66 375" fill="none" stroke="currentColor" strokeOpacity=".18" strokeWidth="1" /></svg>
-        <div className="relative grid size-40 place-items-center rounded-full border border-energy/50 bg-background/90 shadow-[0_0_50px_color-mix(in_oklab,var(--energy)_22%,transparent)] sm:size-52"><div className="absolute inset-3 rounded-full border border-dashed border-energy/35" /><Shield className="size-16 text-energy sm:size-20" /><span className="display-font absolute -bottom-5 bg-background px-3 py-1 text-[10px] font-bold uppercase tracking-[.18em] text-primary">Core offline</span></div>
-        {levels.map((level, index) => <div key={level.number} className={`absolute flex size-14 items-center justify-center border bg-background/90 text-xl font-bold shadow-xl sm:size-[72px] ${index === 0 ? "left-[10%] top-[20%] border-hero-cyan/45 text-hero-cyan" : index === 1 ? "right-[10%] top-[20%] border-hero-coral/45 text-hero-coral" : index === 2 ? "bottom-[14%] left-[17%] border-hero-gold/45 text-hero-gold" : "bottom-[14%] right-[17%] border-hero-mint/45 text-hero-mint"}`}><span className="signal-pulse">{level.emblem}</span></div>)}
-        <div className="absolute left-[23%] top-[9%] size-1.5 rounded-full bg-energy shadow-[0_0_12px_var(--energy)]" /><div className="absolute bottom-[20%] right-[22%] size-1 rounded-full bg-primary shadow-[0_0_14px_var(--primary)]" />
+
+      {/* Right Interactive Hex Core with Avatars on Hover */}
+      <div className="relative flex flex-col items-center justify-center p-4">
+        {/* Orbital Background Rings */}
+        <div className="absolute size-[340px] sm:size-[440px] rounded-full border border-[#00959a]/20 animate-[spin_60s_linear_infinite]" />
+        <div className="absolute size-[260px] sm:size-[340px] rounded-full border border-dashed border-[#60e1d5]/20 animate-[spin_40s_linear_infinite_reverse]" />
+
+        {/* Central Stand / Active Titan Hologram */}
+        <div className="relative flex flex-col items-center justify-center min-h-[340px] w-full">
+          {activeTitan.avatarImage && (
+            <div className="relative h-64 sm:h-80 w-56 flex items-center justify-center animate-in zoom-in-95 duration-300">
+              <div className="absolute bottom-2 size-40 rounded-full bg-gradient-to-t from-[#60e1d5]/30 to-transparent blur-xl pointer-events-none" />
+              <img
+                src={activeTitan.avatarImage}
+                alt={activeTitan.hero}
+                className="relative h-full w-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
+              />
+            </div>
+          )}
+
+          {/* Active Titan Info Badge */}
+          <div className="mt-2 text-center p-3 rounded-xl border border-[#00959a]/50 bg-[#034a52]/80 backdrop-blur max-w-xs shadow-xl">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#60e1d5] font-bold block">
+              Sector 0{activeTitan.number} Titan
+            </span>
+            <span className="font-bold text-white text-base block">{activeTitan.hero}</span>
+            <span className="text-[11px] text-[#defcf9]/70 block mt-0.5">{activeTitan.shortTitle}</span>
+          </div>
+        </div>
+
+        {/* 4 Interactive Titan Selector Buttons Around Core */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-5">
+          {levels.map((lvl, idx) => {
+            const isHovered = hoveredTitan === idx;
+            return (
+              <button
+                key={lvl.number}
+                onMouseEnter={() => setHoveredTitan(idx)}
+                onClick={() => setHoveredTitan(idx)}
+                className={`px-3 py-2 rounded-xl border-2 transition-all flex items-center gap-2 text-xs font-bold ${
+                  isHovered
+                    ? "border-[#60e1d5] bg-[#034a52] text-white shadow-[0_0_15px_rgba(96,225,213,0.35)] scale-105"
+                    : "border-[#034a52] bg-[#02373d]/80 text-[#defcf9]/70 hover:border-[#00959a]"
+                }`}
+              >
+                <span className="text-base">{lvl.emblem}</span>
+                <span>{lvl.hero}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
