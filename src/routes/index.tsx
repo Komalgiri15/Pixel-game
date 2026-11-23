@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { HeroFigure, GridMap } from "@/components/game-ui";
-import { AutoGestureShowcase, GestureGuideModal } from "@/components/gesture-showcase";
 import { InteractiveTitanGuide } from "@/components/interactive-titan-guide";
 import {
   arenaQuestions, levels, premiumFormula, transactionValueFormula, universeFactors, valuationSteps,
@@ -396,7 +395,7 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
 
         <div className="flex items-center gap-3 text-xs text-[#defcf9]/60">
           <Headphones className="size-4 text-[#60e1d5]" />
-          <span>Interactive sound effects & hand gesture controls enabled</span>
+          <span>Interactive sound effects & tactical valuation missions</span>
         </div>
       </div>
 
@@ -466,7 +465,6 @@ function StoryScreen({ panel, onNext, onSkip }: { panel: number; onNext: () => v
 }
 
 function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { progress: GameProgress; statuses: GameProgress["levels"][number]["status"][]; restored: number; xp: number; arenaOpen: boolean; onSelect: (index: number) => void }) {
-  const [gestureGuideOpen, setGestureGuideOpen] = useState(false);
   const inProgress = progress.levels.findIndex((item) => item.status === "in_progress");
   const nextAvailable = progress.levels.findIndex((item) => item.status === "available");
   const focusIndex = inProgress >= 0 ? inProgress : nextAvailable;
@@ -483,14 +481,6 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setGestureGuideOpen(true)}
-            className="border-[#00959a] bg-[#034a52]/40 text-[#60e1d5] hover:bg-[#00959a] hover:text-white text-xs font-semibold flex items-center gap-1.5"
-          >
-            👋 Hand Gestures Guide
-          </Button>
           <StatChip icon={<Sparkles className="size-3.5 text-[#60e1d5]" />} label="Force XP" value={xp.toLocaleString()} />
           <StatChip icon={<BadgeCheck className="size-3.5 text-[#ffac88]" />} label="Badges" value={`${progress.badges.length}/4`} />
         </div>
@@ -498,25 +488,6 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
 
       {/* Game Overview Interactive Titan Dialogue Guide (Cookie Run Kingdom / RPG style) */}
       <InteractiveTitanGuide onSelectSector={onSelect} />
-
-      {/* Hand Gesture Auto-Cycling Strip: Showing 1 by 1 Automatically */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-mono text-[#60e1d5] uppercase font-bold tracking-wider flex items-center gap-2">
-            <span>⚡</span>
-            <span>How to Play with Hand Gestures</span>
-          </span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setGestureGuideOpen(true)}
-            className="text-xs text-[#60e1d5] hover:text-white h-7 px-2 font-semibold"
-          >
-            Expand Card View ↗
-          </Button>
-        </div>
-        <AutoGestureShowcase autoAdvanceMs={3500} />
-      </div>
 
       {/* Main Grid View: Left Map, Right Focus Hero Preview */}
       <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
@@ -578,9 +549,6 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
           </div>
         </div>
       </div>
-
-      {/* Gesture Guide Modal */}
-      <GestureGuideModal isOpen={gestureGuideOpen} onClose={() => setGestureGuideOpen(false)} />
     </section>
   );
 }

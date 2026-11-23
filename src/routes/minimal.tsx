@@ -7,7 +7,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { levels, arenaQuestions, type GameLevel, type GameQuestion } from "@/data/game-content";
-import { AutoGestureShowcase, GestureGuideModal } from "@/components/gesture-showcase";
 
 export const Route = createFileRoute("/minimal")({
   head: () => ({
@@ -126,7 +125,6 @@ export function MinimalGame() {
   const [feedback, setFeedback] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
   const [videoPlaying, setVideoPlaying] = useState(false);
-  const [gestureGuideOpen, setGestureGuideOpen] = useState(false);
 
   const level: GameLevel = levels[activeSector] ?? levels[0]!;
   const currentQ: GameQuestion = level.questions[questionIdx] ?? level.questions[0]!;
@@ -248,25 +246,6 @@ export function MinimalGame() {
                   </button>
                 );
               })}
-            </div>
-
-            {/* Auto Gesture Showcase Appearing One by One */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-mono text-[#60e1d5] uppercase font-bold tracking-wider flex items-center gap-2">
-                  <span>⚡</span>
-                  <span>Hand Gesture Controls</span>
-                </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setGestureGuideOpen(true)}
-                  className="text-xs text-[#60e1d5] hover:text-white h-7 px-2 font-semibold"
-                >
-                  Modal View ↗
-                </Button>
-              </div>
-              <AutoGestureShowcase autoAdvanceMs={3500} />
             </div>
 
             {/* Sector Selector */}
@@ -512,9 +491,6 @@ export function MinimalGame() {
           </div>
         )}
       </main>
-
-      {/* Hand Gesture Modal Guide */}
-      <GestureGuideModal isOpen={gestureGuideOpen} onClose={() => setGestureGuideOpen(false)} />
     </div>
   );
 }
