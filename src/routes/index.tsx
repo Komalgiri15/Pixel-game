@@ -486,69 +486,8 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
         </div>
       </div>
 
-      {/* Game Overview Interactive Titan Dialogue Guide (Cookie Run Kingdom / RPG style) */}
+      {/* Interactive RPG Titan Avatar Tutorial & Mission Deployment Guide */}
       <InteractiveTitanGuide onSelectSector={onSelect} />
-
-      {/* Main Grid View: Left Map, Right Focus Hero Preview */}
-      <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="display-font text-sm font-semibold uppercase tracking-wider text-white">Sector Map</h2>
-            <span className="text-[11px] font-mono text-[#60e1d5]">Select a sector to deploy</span>
-          </div>
-          <GridMap statuses={statuses} badges={progress.badges} onSelect={onSelect} arenaUnlocked={arenaOpen} />
-        </div>
-
-        {/* Right Active Preview */}
-        <div className="space-y-4">
-          <div className="glass-panel relative overflow-hidden rounded-2xl p-6 border border-[#00959a]/50 bg-[#034a52]/60">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[.18em] text-[#60e1d5]">
-                {focusIndex >= 0 ? `Sector 0${focus.number} • ${focus.hero}` : "All sectors restored"}
-              </span>
-              <Flame className="size-4 text-[#ff6164]" />
-            </div>
-
-            <div className="mt-4 flex flex-col sm:flex-row items-center gap-5">
-              <HeroFigure level={focus} compact />
-              <div className="space-y-1 text-center sm:text-left">
-                <h3 className="display-font text-2xl font-bold text-white">{focus.hero}</h3>
-                <p className="text-xs font-semibold text-[#60e1d5]">{focus.title}</p>
-                <p className="mt-2 text-xs leading-relaxed text-[#defcf9]/70">{focus.goal}</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-1.5">
-              {focus.callouts.map((term) => (
-                <span key={term} className="border border-[#00959a]/40 bg-[#02373d]/80 px-2.5 py-1 text-[10px] font-mono text-[#defcf9]/80 rounded-md">
-                  {term}
-                </span>
-              ))}
-            </div>
-
-            {focusIndex >= 0 ? (
-              <Button onClick={() => onSelect(focusIndex)} className="mt-6 w-full rounded-lg bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold text-xs uppercase tracking-wider py-5 shadow-lg shadow-[#60e1d5]/20">
-                {inProgress >= 0 ? "Resume Mission" : "Deploy into Sector"}
-                <ArrowRight className="size-4 ml-1.5" />
-              </Button>
-            ) : (
-              <Button onClick={() => onSelect(4)} disabled={!arenaOpen} className="mt-6 w-full rounded-lg bg-[#ff6164] text-white hover:bg-[#ff7c6b] font-bold text-xs uppercase tracking-wider py-5">
-                {arenaOpen ? "Enter Final Arena" : "All Sectors Complete"}
-                <ArrowRight className="size-4 ml-1.5" />
-              </Button>
-            )}
-          </div>
-
-          {/* Progress bar */}
-          <div className="p-4 rounded-xl border border-[#034a52] bg-[#034a52]/30 space-y-2">
-            <div className="flex justify-between text-xs font-mono">
-              <span className="text-[#defcf9]/70">Grid Restoration</span>
-              <span className="text-[#60e1d5] font-bold">{restored}%</span>
-            </div>
-            <Progress value={restored} className="h-1.5 bg-[#02373d]" />
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
