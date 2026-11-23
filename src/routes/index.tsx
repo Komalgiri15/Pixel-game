@@ -371,9 +371,200 @@ function LevelGate({ level, status, onBack, onStart, onReplay, watched }: { leve
 }
 
 function VideoStage({ level, elapsed, playing, captions, watched, onBack, onPlay, onReplay, onCaptions, onWatched }: { level: GameLevel; elapsed: number; playing: boolean; captions: boolean; watched: boolean; onBack: () => void; onPlay: () => void; onReplay: () => void; onCaptions: () => void; onWatched: () => void }) {
-  const progressPct = Math.min(100, elapsed * 4);
-  const canMarkWatched = elapsed >= 5 || watched;
-  return <section className="sweep-in mx-auto max-w-5xl py-4"><Button variant="ghost" onClick={onBack} className="mb-4 -ml-3 text-xs uppercase tracking-[.12em] text-muted-foreground"><ArrowLeft className="size-4" />Mission gate</Button><div className="mb-4 flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-bold uppercase tracking-[.18em] text-primary">Sector 0{level.number} · Field briefing</p><h1 className="display-font mt-1 text-2xl font-bold">{level.title}</h1></div><span className="border border-border px-3 py-1.5 text-[10px] uppercase tracking-[.12em] text-muted-foreground">Placeholder video · 00:{String(Math.max(0, 25 - elapsed)).padStart(2, "0")}</span></div><div className="glass-panel relative overflow-hidden"><div className="relative grid aspect-video place-items-center overflow-hidden bg-background/65"><div className="absolute inset-0 grid-world opacity-80" /><div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,oklch(0.4_0.12_195/25%),transparent_55%)]" /><div className="relative flex flex-col items-center text-center"><div className="mb-5 flex size-20 items-center justify-center rounded-full border border-energy/60 bg-background/70 text-energy shadow-[0_0_35px_color-mix(in_oklab,var(--energy)_23%,transparent)]"><AudioLines className="size-8" /></div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-energy">Mission briefing · Video placeholder</p><h2 className="display-font mt-3 max-w-lg px-3 text-xl font-bold sm:text-3xl">{level.title}</h2>{captions && <p className="mt-3 max-w-lg px-4 text-sm text-muted-foreground">{level.callouts[(Math.floor(elapsed / 7)) % level.callouts.length]}</p>}</div><div className="absolute bottom-4 left-4 right-4 flex items-center gap-3"><Button variant="ghost" size="icon" onClick={onPlay} aria-label={playing ? "Pause briefing" : "Play briefing"}>{playing ? <Pause /> : <Play />}</Button><div className="h-1 flex-1 overflow-hidden bg-secondary"><div className="h-full bg-energy transition-all" style={{ width: `${progressPct}%` }} /></div><span className="text-[10px] tabular-nums text-muted-foreground">00:{String(elapsed).padStart(2, "0")} / 00:25</span><Button variant="ghost" size="icon" onClick={onReplay} aria-label="Replay briefing"><RotateCcw /></Button><Button variant="ghost" size="icon" onClick={onCaptions} aria-label={captions ? "Turn captions off" : "Turn captions on"} title="Captions">CC</Button><Maximize2 className="hidden size-4 text-muted-foreground sm:block" /></div></div><div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/70 px-4 py-4 sm:px-6"><div><p className="text-xs font-semibold">Mission terms</p><p className="mt-1 text-[11px] text-muted-foreground">{level.callouts.join(" · ")}</p></div><Button onClick={onWatched} disabled={!canMarkWatched} className="rounded-sm text-xs font-bold uppercase tracking-[.1em]">{watched ? "Continue to knowledge check" : "Mark as watched"}<ArrowRight className="size-4" /></Button></div></div><p className="mt-3 text-center text-[10px] text-muted-foreground">Play the briefing or wait 5 seconds to continue.</p></section>;
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [duration, setDuration] = useState(25);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (playing) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, [playing]);
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+      if (videoRef.current.duration) {
+        setDuration(videoRef.current.duration);
+      }
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current && videoRef.current.duration) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleEnded = () => {
+    setIsVideoPlaying(false);
+  };
+
+  const activeElapsed = level.videoSrc ? currentTime : elapsed;
+  const activeDuration = level.videoSrc ? duration : 25;
+  const progressPct = activeDuration > 0 ? Math.min(100, (activeElapsed / activeDuration) * 100) : 0;
+  const canMarkWatched = activeElapsed >= 5 || watched;
+
+  const togglePlay = () => {
+    if (level.videoSrc && videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play().catch(() => {});
+        setIsVideoPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsVideoPlaying(false);
+      }
+    }
+    onPlay();
+  };
+
+  const handleReplayClick = () => {
+    if (level.videoSrc && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+      setIsVideoPlaying(true);
+    }
+    onReplay();
+  };
+
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  };
+
+  return (
+    <section className="sweep-in mx-auto max-w-5xl py-4">
+      <Button variant="ghost" onClick={onBack} className="mb-4 -ml-3 text-xs uppercase tracking-[.12em] text-muted-foreground">
+        <ArrowLeft className="size-4" />Mission gate
+      </Button>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[.18em] text-primary">Sector 0{level.number} · Field briefing</p>
+          <h1 className="display-font mt-1 text-2xl font-bold">{level.title}</h1>
+        </div>
+        <span className="border border-border px-3 py-1.5 text-[10px] uppercase tracking-[.12em] text-muted-foreground">
+          {level.videoSrc ? "Briefing video" : "Placeholder video"} · {formatTime(Math.max(0, activeDuration - activeElapsed))}
+        </span>
+      </div>
+      <div className="glass-panel relative overflow-hidden">
+        <div className="relative aspect-video w-full overflow-hidden bg-background/90">
+          {level.videoSrc ? (
+            <video
+              ref={videoRef}
+              src={level.videoSrc}
+              className="size-full object-contain bg-black"
+              playsInline
+              onTimeUpdate={handleTimeUpdate}
+              onLoadedMetadata={handleLoadedMetadata}
+              onPlay={() => setIsVideoPlaying(true)}
+              onPause={() => setIsVideoPlaying(false)}
+              onEnded={handleEnded}
+              onClick={togglePlay}
+            />
+          ) : (
+            <div className="relative grid size-full place-items-center overflow-hidden bg-background/65">
+              <div className="absolute inset-0 grid-world opacity-80" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,oklch(0.4_0.12_195/25%),transparent_55%)]" />
+              <div className="relative flex flex-col items-center text-center">
+                <div className="mb-5 flex size-20 items-center justify-center rounded-full border border-energy/60 bg-background/70 text-energy shadow-[0_0_35px_color-mix(in_oklab,var(--energy)_23%,transparent)]">
+                  <AudioLines className="size-8" />
+                </div>
+                <p className="text-[10px] font-bold uppercase tracking-[.2em] text-energy">Mission briefing · Video placeholder</p>
+                <h2 className="display-font mt-3 max-w-lg px-3 text-xl font-bold sm:text-3xl">{level.title}</h2>
+                {captions && <p className="mt-3 max-w-lg px-4 text-sm text-muted-foreground">{level.callouts[(Math.floor(elapsed / 7)) % level.callouts.length]}</p>}
+              </div>
+            </div>
+          )}
+
+          {/* Captions overlay if enabled and video has callouts */}
+          {captions && level.videoSrc && (
+            <div className="pointer-events-none absolute bottom-14 left-4 right-4 text-center">
+              <span className="inline-block rounded bg-background/80 px-3 py-1 text-xs font-medium text-foreground backdrop-blur-sm border border-border/50">
+                {level.callouts[(Math.floor(activeElapsed / 7)) % level.callouts.length]}
+              </span>
+            </div>
+          )}
+
+          {/* Video control bar */}
+          <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 bg-gradient-to-t from-background/95 via-background/70 to-transparent p-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={togglePlay}
+              aria-label={(level.videoSrc ? isVideoPlaying : playing) ? "Pause briefing" : "Play briefing"}
+            >
+              {(level.videoSrc ? isVideoPlaying : playing) ? <Pause className="size-4" /> : <Play className="size-4" />}
+            </Button>
+            <div
+              className="h-1.5 flex-1 cursor-pointer overflow-hidden rounded bg-secondary/80"
+              onClick={(e) => {
+                if (level.videoSrc && videoRef.current && activeDuration > 0) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const pos = (e.clientX - rect.left) / rect.width;
+                  videoRef.current.currentTime = pos * activeDuration;
+                }
+              }}
+            >
+              <div className="h-full bg-energy transition-all" style={{ width: `${progressPct}%` }} />
+            </div>
+            <span className="text-[10px] tabular-nums text-muted-foreground whitespace-nowrap">
+              {formatTime(activeElapsed)} / {formatTime(activeDuration)}
+            </span>
+            <Button variant="ghost" size="icon" onClick={handleReplayClick} aria-label="Replay briefing">
+              <RotateCcw className="size-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onCaptions}
+              aria-label={captions ? "Turn captions off" : "Turn captions on"}
+              title="Captions"
+              className={captions ? "text-primary font-bold" : "text-muted-foreground"}
+            >
+              CC
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden sm:inline-flex"
+              onClick={() => {
+                if (level.videoSrc && videoRef.current) {
+                  if (document.fullscreenElement) {
+                    document.exitFullscreen().catch(() => {});
+                  } else {
+                    videoRef.current.requestFullscreen().catch(() => {});
+                  }
+                }
+              }}
+              aria-label="Fullscreen"
+            >
+              <Maximize2 className="size-4 text-muted-foreground" />
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border/70 px-4 py-4 sm:px-6">
+          <div>
+            <p className="text-xs font-semibold">Mission terms</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">{level.callouts.join(" · ")}</p>
+          </div>
+          <Button onClick={onWatched} disabled={!canMarkWatched} className="rounded-sm text-xs font-bold uppercase tracking-[.1em]">
+            {watched ? "Continue to knowledge check" : "Mark as watched"}
+            <ArrowRight className="size-4" />
+          </Button>
+        </div>
+      </div>
+      <p className="mt-3 text-center text-[10px] text-muted-foreground">
+        {level.videoSrc ? "Watch the briefing to prepare for your mission check." : "Play the briefing or wait 5 seconds to continue."}
+      </p>
+    </section>
+  );
 }
 
 function QuizStage({ level, question, index, selected, answered, retryUsed, streak, onSelect, onSubmit, onAdvance }: { level: GameLevel; question: GameQuestion; index: number; selected: string[]; answered: boolean | null; retryUsed: boolean; streak: number; onSelect: (answer: string) => void; onSubmit: () => void; onAdvance: () => void }) {
