@@ -66,6 +66,7 @@ export function GridMap({
       <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-[1fr_1.2fr_1fr] sm:items-center sm:gap-x-7 sm:gap-y-5">
         {[0, 1, 2, 3].map((index) => {
           const level = levelsForMap[index];
+          if (!level) return null;
           const status = statuses[index] ?? "locked";
           const hue = hueStyles[level.hue];
           const locked = status === "locked";
