@@ -27,7 +27,7 @@ type Avatar = {
   bg: string;
   glow: string;
   specialty: string;
-  svg: (color: string) => React.ReactNode;
+  image: string;
 };
 
 const AVATARS: Avatar[] = [
@@ -40,18 +40,7 @@ const AVATARS: Avatar[] = [
     bg: "bg-[#034a52]",
     glow: "shadow-[0_0_25px_rgba(96,225,213,0.35)]",
     specialty: "Comparable Universe & Premiums",
-    svg: (color) => (
-      <svg viewBox="0 0 100 100" className="size-full">
-        <circle cx="50" cy="50" r="45" fill="#034a52" stroke={color} strokeWidth="3" />
-        <circle cx="50" cy="38" r="16" fill={color} />
-        <path d="M26 78 C26 56, 74 56, 74 78 Z" fill={color} opacity="0.85" />
-        <circle cx="44" cy="36" r="3" fill="#02373d" />
-        <circle cx="56" cy="36" r="3" fill="#02373d" />
-        <path d="M42 46 Q50 51 58 46" stroke="#02373d" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-        <path d="M50 16 L50 6" stroke={color} strokeWidth="3" strokeLinecap="round" />
-        <circle cx="50" cy="4" r="3" fill={color} />
-      </svg>
-    ),
+    image: "/avatars/comp_scout.jpg",
   },
   {
     id: "shaper",
@@ -62,17 +51,7 @@ const AVATARS: Avatar[] = [
     bg: "bg-[#034a52]",
     glow: "shadow-[0_0_25px_rgba(255,97,100,0.35)]",
     specialty: "Deal Consideration & Capital",
-    svg: (color) => (
-      <svg viewBox="0 0 100 100" className="size-full">
-        <circle cx="50" cy="50" r="45" fill="#034a52" stroke={color} strokeWidth="3" />
-        <rect x="34" y="24" width="32" height="28" rx="8" fill={color} />
-        <path d="M24 80 C24 58, 76 58, 76 80 Z" fill={color} opacity="0.85" />
-        <rect x="40" y="32" width="6" height="5" rx="1" fill="#02373d" />
-        <rect x="54" y="32" width="6" height="5" rx="1" fill="#02373d" />
-        <path d="M44 44 H56" stroke="#02373d" strokeWidth="2.5" strokeLinecap="round" />
-        <polygon points="50,14 42,24 58,24" fill={color} />
-      </svg>
-    ),
+    image: "/avatars/deal_shaper.jpg",
   },
   {
     id: "master",
@@ -83,17 +62,7 @@ const AVATARS: Avatar[] = [
     bg: "bg-[#034a52]",
     glow: "shadow-[0_0_25px_rgba(255,172,136,0.35)]",
     specialty: "LTM Metrics & Multiples",
-    svg: (color) => (
-      <svg viewBox="0 0 100 100" className="size-full">
-        <circle cx="50" cy="50" r="45" fill="#034a52" stroke={color} strokeWidth="3" />
-        <circle cx="50" cy="38" r="16" fill={color} />
-        <path d="M22 82 C25 60, 75 60, 78 82 Z" fill={color} opacity="0.85" />
-        <circle cx="43" cy="36" r="3.5" fill="#02373d" />
-        <circle cx="57" cy="36" r="3.5" fill="#02373d" />
-        <path d="M44 45 Q50 49 56 45" stroke="#02373d" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-        <polygon points="50,10 54,20 64,22 56,28 58,38 50,32 42,38 44,28 36,22 46,20" fill={color} />
-      </svg>
-    ),
+    image: "/avatars/multiple_master.jpg",
   },
   {
     id: "guardian",
@@ -104,17 +73,7 @@ const AVATARS: Avatar[] = [
     bg: "bg-[#034a52]",
     glow: "shadow-[0_0_25px_rgba(0,149,154,0.35)]",
     specialty: "SEC Filings & Source Documents",
-    svg: (color) => (
-      <svg viewBox="0 0 100 100" className="size-full">
-        <circle cx="50" cy="50" r="45" fill="#034a52" stroke={color} strokeWidth="3" />
-        <path d="M35 24 L65 24 L65 48 C65 58, 35 58, 35 48 Z" fill={color} />
-        <path d="M25 80 C25 60, 75 60, 75 80 Z" fill={color} opacity="0.85" />
-        <rect x="42" y="34" width="5" height="4" rx="1" fill="#02373d" />
-        <rect x="53" y="34" width="5" height="4" rx="1" fill="#02373d" />
-        <path d="M44 44 H56" stroke="#02373d" strokeWidth="2" strokeLinecap="round" />
-        <circle cx="50" cy="16" r="4" fill={color} />
-      </svg>
-    ),
+    image: "/avatars/source_guardian.jpg",
   },
 ];
 
@@ -237,8 +196,8 @@ export function MinimalGame() {
             <span className="hidden sm:inline">Gesture Controls</span>
           </Button>
           <div className="flex items-center gap-2 pl-2 border-l border-[#034a52]">
-            <div className={`size-8 rounded-full border-2 ${selectedAvatar.border} overflow-hidden p-0.5`}>
-              {selectedAvatar.svg(selectedAvatar.color)}
+            <div className={`size-8 rounded-full border-2 ${selectedAvatar.border} overflow-hidden`}>
+              <img src={selectedAvatar.image} alt={selectedAvatar.name} className="size-full object-cover" />
             </div>
             <span className="text-xs font-semibold hidden md:inline text-[#defcf9]">{selectedAvatar.name}</span>
           </div>
@@ -277,8 +236,8 @@ export function MinimalGame() {
                         ✓
                       </span>
                     )}
-                    <div className="size-20 rounded-full overflow-hidden p-1 bg-[#02373d]/70 border border-[#00959a]/40">
-                      {av.svg(av.color)}
+                    <div className="size-24 rounded-2xl overflow-hidden border border-[#00959a]/40 shadow-inner">
+                      <img src={av.image} alt={av.name} className="size-full object-cover" />
                     </div>
                     <div>
                       <h3 className="font-bold text-white text-base">{av.name}</h3>
@@ -438,8 +397,8 @@ export function MinimalGame() {
                 <h2 className="font-display text-xl sm:text-2xl font-bold text-white leading-snug">
                   {currentQ.stem}
                 </h2>
-                <div className={`size-10 rounded-full border-2 ${selectedAvatar.border} overflow-hidden p-0.5 shrink-0`}>
-                  {selectedAvatar.svg(selectedAvatar.color)}
+                <div className={`size-12 rounded-full border-2 ${selectedAvatar.border} overflow-hidden shrink-0 shadow-md`}>
+                  <img src={selectedAvatar.image} alt={selectedAvatar.name} className="size-full object-cover" />
                 </div>
               </div>
 
@@ -528,8 +487,8 @@ export function MinimalGame() {
         {/* 4. RESULTS STAGE */}
         {mode === "results" && (
           <div className="p-8 rounded-2xl border-2 border-[#034a52] bg-[#034a52]/60 text-center space-y-6 animate-in fade-in duration-300">
-            <div className={`size-24 rounded-full border-4 ${selectedAvatar.border} mx-auto overflow-hidden p-1 shadow-2xl`}>
-              {selectedAvatar.svg(selectedAvatar.color)}
+            <div className={`size-28 rounded-full border-4 ${selectedAvatar.border} mx-auto overflow-hidden shadow-2xl ${selectedAvatar.glow}`}>
+              <img src={selectedAvatar.image} alt={selectedAvatar.name} className="size-full object-cover" />
             </div>
 
             <div className="space-y-1">
