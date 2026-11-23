@@ -844,10 +844,13 @@ function QuizStage({ level, question, index, selected, answered, retryUsed, stre
             const isSelected = selected.includes(option);
             const isCorrectChoice = question.correctAnswers.includes(option);
             const showStatus = answered !== null;
+            // On the first incorrect attempt (!answered && !retryUsed), do NOT reveal the right answer!
+            // Only reveal the correct answer if the user got it right, or if they have already used their retry.
+            const revealCorrect = showStatus && (answered === true || retryUsed);
 
             let stateClass = "border-[#00959a]/30 bg-[#defcf9]/20 hover:border-[#00959a] hover:bg-[#defcf9]/50 text-[#02373d]";
             if (showStatus) {
-              if (isCorrectChoice) {
+              if (revealCorrect && isCorrectChoice) {
                 stateClass = "border-emerald-600 bg-emerald-50 text-emerald-950 font-bold shadow-sm";
               } else if (isSelected && !isCorrectChoice) {
                 stateClass = "border-[#ff6164] bg-rose-50 text-[#02373d] shadow-sm";
@@ -873,7 +876,7 @@ function QuizStage({ level, question, index, selected, answered, retryUsed, stre
                   {String.fromCharCode(65 + optIdx)}
                 </span>
                 <span className="flex-1 text-base sm:text-lg leading-6 font-semibold text-[#02373d]">{option}</span>
-                {showStatus && isCorrectChoice && (
+                {showStatus && revealCorrect && isCorrectChoice && (
                   <Check className="size-6 shrink-0 text-emerald-600 font-black" aria-label="Correct choice" />
                 )}
                 {showStatus && isSelected && !isCorrectChoice && (
@@ -903,14 +906,21 @@ function QuizStage({ level, question, index, selected, answered, retryUsed, stre
               ) : (
                 <>
                   <RotateCcw className="size-5 text-[#ff6164]" />
-                  {retryUsed ? "Not quite — review the concept." : "Not quite — one retry available."}
+                  {!retryUsed ? "Incorrect. You have one retry — think carefully and try again!" : "Incorrect — review the concept explanation below."}
                 </>
               )}
             </p>
-            <p className="mt-2.5 text-sm sm:text-base leading-relaxed text-[#02373d] font-medium">
-              {question.explanation}
-            </p>
-            {question.type === "multi" && (
+            {/* Hide detailed explanation on first failed attempt so user can retry without the answer spoiled */}
+            {(answered || retryUsed) ? (
+              <p className="mt-2.5 text-sm sm:text-base leading-relaxed text-[#02373d] font-medium">
+                {question.explanation}
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-[#034a52] font-semibold">
+                Click "Try once more" below to make your second attempt.
+              </p>
+            )}
+            {question.type === "multi" && (answered || retryUsed) && (
               <p className="mt-2 text-xs text-[#034a52] font-semibold">
                 Correct choices are marked with a check; incorrect selections show an X.
               </p>
