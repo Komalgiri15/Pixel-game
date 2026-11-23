@@ -92,6 +92,14 @@ function TransactionTitans() {
     return () => window.clearInterval(timer);
   }, [screen, videoPlaying]);
 
+  const completedCount = progress.levels.filter((item) => item.status === "complete").length;
+  const xp = completedCount * 500 + progress.levels.reduce((sum, item) => sum + item.bestScore * 25, 0);
+  const active = levels[activeLevel];
+  const arenaOpen = canEnterArena(progress);
+  const currentQuestion: GameQuestion | undefined = screen === "arena" ? arenaQuestions[quizIndex] : active?.questions[quizIndex];
+  const currentStatus = progress.levels[activeLevel]?.status;
+  const restored = Math.round((completedCount / levels.length) * 100);
+
   useEffect(() => {
     if ((screen === "quiz" || screen === "arena") && currentQuestion && answered === null) {
       const char = active ? (active.hue === "cyan" ? "scout" : active.hue === "coral" ? "shaper" : active.hue === "gold" ? "master" : "guardian") : "commander";
@@ -100,15 +108,7 @@ function TransactionTitans() {
       }, 350);
       return () => clearTimeout(timer);
     }
-  }, [screen, quizIndex, currentQuestion?.id, answered]);
-
-  const completedCount = progress.levels.filter((item) => item.status === "complete").length;
-  const xp = completedCount * 500 + progress.levels.reduce((sum, item) => sum + item.bestScore * 25, 0);
-  const active = levels[activeLevel];
-  const arenaOpen = canEnterArena(progress);
-  const currentQuestion: GameQuestion | undefined = screen === "arena" ? arenaQuestions[quizIndex] : active?.questions[quizIndex];
-  const currentStatus = progress.levels[activeLevel]?.status;
-  const restored = Math.round((completedCount / levels.length) * 100);
+  }, [screen, quizIndex, currentQuestion?.id, answered, active]);
 
   const playTone = (kind: "click" | "correct" | "wrong" | "unlock" = "click") => {
     if (!soundOn) return;
