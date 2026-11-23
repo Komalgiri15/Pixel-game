@@ -472,9 +472,9 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
 
 function StoryScreen({ panel, onNext, onSkip }: { panel: number; onNext: () => void; onSkip: () => void }) {
   const scenes = [
-    { label: "01 · THE FRACTURE", title: "The Grid went dark.", copy: "The Valuation Grid has been divided into four sectors. The force that connected each deal, multiple and source is gone.", icon: <span className="display-font text-7xl text-energy">⌬</span> },
-    { label: "02 · THE GUARDIANS", title: "Four Titans hold the line.", copy: "Comp Scout. Deal Shaper. Multiple Master. Source Guardian. Each guards a sector of the valuation force.", icon: <div className="grid grid-cols-2 gap-3 text-3xl"><span className="text-hero-cyan">⌕</span><span className="text-hero-coral">⇄</span><span className="text-hero-gold">×</span><span className="text-hero-mint">▤</span></div> },
-    { label: "03 · THE COMMANDER", title: "You are the fifth.", copy: "Watch the mission briefing. Answer the call. Earn each power badge and light the Grid. Restore all four sectors to open the Final Assessment Arena.", icon: <Shield className="size-20 text-primary" /> },
+    { label: "01 · THE FRACTURE", title: "The Grid went dark.", copy: "The Valuation Grid has been divided into four sectors. The force that connected each deal, multiple and source is gone.", icon: <span className="display-font text-7xl text-[#00959a]">⌬</span> },
+    { label: "02 · THE GUARDIANS", title: "Four Titans hold the line.", copy: "Comp Scout. Deal Shaper. Multiple Master. Source Guardian. Each guards a sector of the valuation force.", icon: <div className="grid grid-cols-2 gap-3 text-3xl"><span className="text-[#00959a]">⌕</span><span className="text-[#ff6164]">⇄</span><span className="text-[#ffac88]">×</span><span className="text-[#034a52]">▤</span></div> },
+    { label: "03 · THE COMMANDER", title: "You are the fifth.", copy: "Watch the mission briefing. Answer the call. Earn each power badge and light the Grid. Restore all four sectors to open the Final Assessment Arena.", icon: <Shield className="size-20 text-[#00959a]" /> },
   ];
   const scene = scenes[panel] ?? scenes[0]!;
 
@@ -482,7 +482,36 @@ function StoryScreen({ panel, onNext, onSkip }: { panel: number; onNext: () => v
     voice.speak(`${scene.title}. ${scene.copy}`, { character: "commander" });
   }, [panel]);
 
-  return <section className="sweep-in mx-auto grid min-h-[72vh] max-w-5xl items-center gap-8 py-12 md:grid-cols-[.85fr_1.15fr]"><div className="glass-panel relative flex min-h-72 items-center justify-center overflow-hidden"><div className="absolute inset-0 grid-world opacity-70" /><div className="relative">{scene.icon}</div><div className="absolute bottom-4 left-5 text-[11px] font-bold uppercase tracking-[.18em] text-energy">Transmission {String(panel + 1).padStart(2, "0")}</div></div><div><p className="text-xs font-bold uppercase tracking-[.2em] text-primary">{scene.label}</p><h1 className="display-font mt-4 text-4xl font-extrabold sm:text-6xl text-white tracking-tight">{scene.title}</h1><p className="mt-5 max-w-xl text-lg sm:text-xl leading-8 text-[#f2fcfa] font-medium">{scene.copy}</p><div className="mt-7 flex gap-2" aria-label={`Story panel ${panel + 1} of 3`}>{scenes.map((_, index) => <span key={index} className={`h-1.5 w-12 rounded-full ${index <= panel ? "bg-primary" : "bg-muted"}`} />)}</div><div className="mt-8 flex gap-3"><Button onClick={onNext} className="rounded-md px-7 py-3 text-sm font-bold uppercase tracking-[.12em]">{panel === 2 ? "Enter the Grid" : "Continue"}<ArrowRight className="size-4" /></Button><Button variant="ghost" onClick={onSkip} className="rounded-md text-xs uppercase tracking-[.1em] text-muted-foreground">Skip</Button></div></div></section>;
+  return (
+    <section className="sweep-in mx-auto grid min-h-[72vh] max-w-5xl items-center gap-8 py-12 md:grid-cols-[.85fr_1.15fr]">
+      <div className="rounded-2xl border-2 border-[#00959a]/30 bg-white shadow-xl relative flex min-h-72 items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 grid-world opacity-70" />
+        <div className="relative">{scene.icon}</div>
+        <div className="absolute bottom-4 left-5 text-[11px] font-bold uppercase tracking-[.18em] text-[#00959a]">
+          Transmission {String(panel + 1).padStart(2, "0")}
+        </div>
+      </div>
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[.2em] text-[#00959a]">{scene.label}</p>
+        <h1 className="display-font mt-4 text-4xl font-extrabold sm:text-6xl text-[#02373d] tracking-tight">{scene.title}</h1>
+        <p className="mt-5 max-w-xl text-lg sm:text-xl leading-8 text-[#034a52] font-medium">{scene.copy}</p>
+        <div className="mt-7 flex gap-2" aria-label={`Story panel ${panel + 1} of 3`}>
+          {scenes.map((_, index) => (
+            <span key={index} className={`h-1.5 w-12 rounded-full ${index <= panel ? "bg-[#00959a]" : "bg-[#00959a]/20"}`} />
+          ))}
+        </div>
+        <div className="mt-8 flex gap-3">
+          <Button onClick={onNext} className="rounded-xl px-7 py-3 text-sm font-bold uppercase tracking-[.12em] bg-[#00959a] hover:bg-[#02373d] text-white shadow-md">
+            {panel === 2 ? "Enter the Grid" : "Continue"}
+            <ArrowRight className="size-4" />
+          </Button>
+          <Button variant="ghost" onClick={onSkip} className="rounded-xl text-xs uppercase tracking-[.1em] text-[#034a52] hover:bg-white/60">
+            Skip
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { progress: GameProgress; statuses: GameProgress["levels"][number]["status"][]; restored: number; xp: number; arenaOpen: boolean; onSelect: (index: number) => void }) {
@@ -494,16 +523,16 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
   return (
     <section className="sweep-in max-w-6xl mx-auto space-y-6">
       {/* Header bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#034a52] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#00959a]/30 pb-5">
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-[.2em] text-[#60e1d5]">Mission Control · Valuation Grid</p>
-          <h1 className="display-font mt-1 text-2xl sm:text-3xl font-extrabold text-white">Welcome back, Commander.</h1>
-          <p className="mt-1 text-xs text-[#defcf9]/70">The Grid is {restored}% restored. {arenaOpen ? "The Arena is ready." : "Your next sector is waiting."}</p>
+          <p className="text-[10px] font-mono uppercase tracking-[.2em] text-[#00959a] font-bold">Mission Control · Valuation Grid</p>
+          <h1 className="display-font mt-1 text-2xl sm:text-3xl font-extrabold text-[#02373d]">Welcome back, Commander.</h1>
+          <p className="mt-1 text-xs text-[#034a52] font-medium">The Grid is {restored}% restored. {arenaOpen ? "The Arena is ready." : "Your next sector is waiting."}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <StatChip icon={<Sparkles className="size-3.5 text-[#60e1d5]" />} label="Force XP" value={xp.toLocaleString()} />
-          <StatChip icon={<BadgeCheck className="size-3.5 text-[#ffac88]" />} label="Badges" value={`${progress.badges.length}/4`} />
+          <StatChip icon={<Sparkles className="size-3.5 text-[#00959a]" />} label="Force XP" value={xp.toLocaleString()} />
+          <StatChip icon={<BadgeCheck className="size-3.5 text-[#ff6164]" />} label="Badges" value={`${progress.badges.length}/4`} />
         </div>
       </div>
 
@@ -516,7 +545,60 @@ function completedCountSafe(progress: GameProgress) { return progress.levels.fil
 function StatChip({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="flex items-center gap-2 border border-border bg-card/70 px-3 py-2"><span>{icon}</span><span><span className="block text-[9px] uppercase tracking-[.12em] text-muted-foreground">{label}</span><span className="block text-xs font-bold tabular-nums">{value}</span></span></div>; }
 
 function LevelGate({ level, status, onBack, onStart, onReplay, watched }: { level: GameLevel; status: string; onBack: () => void; onStart: () => void; onReplay: () => void; watched: boolean }) {
-  return <section className="sweep-in mx-auto max-w-5xl py-4"><Button variant="ghost" onClick={onBack} className="mb-5 -ml-3 text-xs uppercase tracking-[.12em] text-muted-foreground"><ArrowLeft className="size-4" />Grid</Button><div className="glass-panel relative overflow-hidden"><div className="absolute inset-0 grid-world opacity-55" /><div className={`absolute -right-10 top-0 h-full w-1/3 skew-x-[-18deg] opacity-10 ${level.hue === "cyan" ? "bg-hero-cyan" : level.hue === "coral" ? "bg-hero-coral" : level.hue === "gold" ? "bg-hero-gold" : "bg-hero-mint"}`} /><div className="relative grid items-center gap-5 p-5 sm:grid-cols-[.8fr_1.2fr] sm:p-10"><div className="flex justify-center"><HeroFigure level={level} /></div><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-primary">Sector 0{level.number} · {level.hero}</p><h1 className="display-font mt-3 text-3xl font-bold sm:text-4xl">{level.title}</h1><p className="mt-4 text-sm leading-6 text-muted-foreground">{level.goal}</p><div className="mt-5 flex flex-wrap gap-2">{level.callouts.map((term) => <span key={term} className="border border-border bg-background/60 px-3 py-1.5 text-[10px] font-medium text-foreground/80">{term}</span>)}</div><div className="mt-7 flex flex-wrap items-center gap-3"><Button onClick={onStart} className="h-11 rounded-sm px-6 text-xs font-bold uppercase tracking-[.13em]">{watched ? "Replay briefing" : "Start mission"}<ArrowRight className="size-4" /></Button>{watched && <Button variant="outline" onClick={onReplay} className="h-11 rounded-sm text-xs uppercase tracking-[.1em]"><RotateCcw className="size-4" /> Replay video</Button>}<span className="text-[10px] capitalize text-muted-foreground">{status.replace("_", " ")}</span></div></div></div></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="border-t border-border/70 pt-4"><p className="text-[10px] font-bold uppercase tracking-[.15em] text-muted-foreground">Mission learning goal</p><p className="mt-2 text-sm leading-6">{level.goal}</p></div><div className="border-t border-border/70 pt-4"><p className="text-[10px] font-bold uppercase tracking-[.15em] text-muted-foreground">Sector badge</p><p className="mt-2 flex items-center gap-2 text-sm"><Award className={`size-4 ${level.hue === "cyan" ? "text-hero-cyan" : level.hue === "coral" ? "text-hero-coral" : level.hue === "gold" ? "text-hero-gold" : "text-hero-mint"}`} />{level.hero} Power Badge · 4/5 to earn</p></div></div></section>;
+  return (
+    <section className="sweep-in mx-auto max-w-5xl py-4">
+      <Button variant="ghost" onClick={onBack} className="mb-5 -ml-3 text-xs uppercase tracking-[.12em] text-[#034a52] hover:bg-white/60">
+        <ArrowLeft className="size-4" />Grid
+      </Button>
+      <div className="rounded-2xl border-2 border-[#00959a]/30 bg-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
+        <div className="absolute inset-0 grid-world opacity-55" />
+        <div className="relative grid items-center gap-5 sm:grid-cols-[.8fr_1.2fr]">
+          <div className="flex justify-center">
+            <HeroFigure level={level} />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[.2em] text-[#00959a]">
+              Sector 0{level.number} · {level.hero}
+            </p>
+            <h1 className="display-font mt-3 text-3xl font-extrabold sm:text-4xl text-[#02373d]">{level.title}</h1>
+            <p className="mt-4 text-sm leading-6 text-[#034a52] font-medium">{level.goal}</p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {level.callouts.map((term) => (
+                <span key={term} className="border border-[#00959a]/30 bg-[#defcf9]/50 px-3 py-1.5 text-[10px] font-bold text-[#02373d] rounded-lg">
+                  {term}
+                </span>
+              ))}
+            </div>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Button onClick={onStart} className="h-11 rounded-xl px-6 text-xs font-bold uppercase tracking-[.13em] bg-[#00959a] hover:bg-[#02373d] text-white shadow-md">
+                {watched ? "Replay briefing" : "Start mission"}
+                <ArrowRight className="size-4" />
+              </Button>
+              {watched && (
+                <Button variant="outline" onClick={onReplay} className="h-11 rounded-xl text-xs uppercase tracking-[.1em] border-[#00959a]/50 text-[#02373d] bg-white hover:bg-[#defcf9]">
+                  <RotateCcw className="size-4" /> Replay video
+                </Button>
+              )}
+              <span className="text-[10px] capitalize font-bold text-[#00959a]">{status.replace("_", " ")}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div className="border-t border-[#00959a]/20 pt-4">
+          <p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#00959a]">Mission learning goal</p>
+          <p className="mt-2 text-sm leading-6 text-[#02373d] font-medium">{level.goal}</p>
+        </div>
+        <div className="border-t border-[#00959a]/20 pt-4">
+          <p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#00959a]">Sector badge</p>
+          <p className="mt-2 flex items-center gap-2 text-sm text-[#02373d] font-bold">
+            <Award className="size-4 text-[#00959a]" />
+            {level.hero} Power Badge · 4/5 to earn
+          </p>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function VideoStage({ level, elapsed, playing, captions, watched, onBack, onPlay, onReplay, onCaptions, onWatched }: { level: GameLevel; elapsed: number; playing: boolean; captions: boolean; watched: boolean; onBack: () => void; onPlay: () => void; onReplay: () => void; onCaptions: () => void; onWatched: () => void }) {
@@ -717,13 +799,151 @@ function VideoStage({ level, elapsed, playing, captions, watched, onBack, onPlay
 }
 
 function QuizStage({ level, question, index, selected, answered, retryUsed, streak, onSelect, onSubmit, onAdvance }: { level: GameLevel; question: GameQuestion; index: number; selected: string[]; answered: boolean | null; retryUsed: boolean; streak: number; onSelect: (answer: string) => void; onSubmit: () => void; onAdvance: () => void }) {
-  return <section className="sweep-in mx-auto max-w-3xl py-4"><div className="mb-5 flex items-center justify-between"><div className="flex items-center gap-3"><div className="flex size-11 items-center justify-center border border-energy/40 bg-accent/60 text-energy text-lg font-bold">{level.emblem}</div><span><span className="block text-xs font-bold uppercase tracking-[.15em] text-primary">Knowledge check</span><span className="block text-sm text-[#f2fcfa] font-semibold">{level.hero}</span></span></div><div className="flex items-center gap-3"><span className="text-sm font-mono font-bold tabular-nums text-[#defcf9]">{index + 1} / 5</span>{streak >= 2 && <span className="flex items-center gap-1 text-sm font-bold text-hero-coral"><Flame className="size-4" />{streak}</span>}</div></div><Progress value={((index + 1) / 5) * 100} className="mb-6 h-1.5 bg-secondary" /><div className="glass-panel p-6 sm:p-9"><div className="flex items-start justify-between gap-4"><h1 className="display-font max-w-2xl text-2xl font-bold leading-snug sm:text-3xl text-white tracking-tight">{question.stem}</h1><CircleHelp className="mt-1 size-6 shrink-0 text-[#68ede2]" /></div>{question.type === "multi" && <p className="mt-3 text-sm text-[#defcf9]/80 font-medium">Select every correct answer.</p>}<div className="mt-6 grid gap-3.5">{question.options.map((option, index) => {
-    const isSelected = selected.includes(option);
-    const isCorrectChoice = question.correctAnswers.includes(option);
-    const showStatus = answered !== null;
-    const stateClass = showStatus && isCorrectChoice ? "border-hero-mint/80 bg-hero-mint/20 text-white" : showStatus && isSelected && !isCorrectChoice ? "border-destructive/80 bg-destructive/20 text-white" : isSelected ? "border-primary bg-primary/20 text-white" : "border-border bg-background/50 hover:border-energy/60 hover:bg-accent/60 text-[#f2fcfa]";
-    return <button key={option} onClick={() => onSelect(option)} disabled={answered !== null} className={`group flex min-h-16 w-full items-center gap-4 border px-4 py-3.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5 rounded-lg ${stateClass}`}><span className={`flex size-8 shrink-0 items-center justify-center border text-xs font-extrabold rounded ${isSelected ? "border-primary bg-primary text-primary-foreground" : "border-border text-[#defcf9] bg-[#081a20]"}`}>{String.fromCharCode(65 + index)}</span><span className="flex-1 text-base sm:text-lg leading-6 font-medium">{option}</span>{showStatus && isCorrectChoice && <Check className="size-5 shrink-0 text-hero-mint font-bold" aria-label="Correct choice" />}{showStatus && isSelected && !isCorrectChoice && <X className="size-5 shrink-0 text-destructive font-bold" aria-label="Incorrect choice" />}</button>;
-  })}</div>{answered !== null && <div role="status" className={`mt-6 border-l-4 p-5 rounded-r-lg ${answered ? "border-hero-mint bg-hero-mint/10" : "border-hero-coral bg-hero-coral/10"}`}><p className="flex items-center gap-2.5 text-base font-bold text-white">{answered ? <><Check className="size-5 text-hero-mint" />Correct. You are ready to continue.</> : <><RotateCcw className="size-5 text-hero-coral" />{retryUsed ? "Not quite — review the concept." : "Not quite — one retry available."}</>}</p><p className="mt-2.5 text-sm sm:text-base leading-relaxed text-[#defcf9] font-normal">{question.explanation}</p>{question.type === "multi" && <p className="mt-2 text-xs text-muted-foreground">Correct choices are marked with a check; incorrect selections show an X.</p>}</div>}<div className="mt-7 flex justify-end">{answered === null ? <Button onClick={onSubmit} disabled={selected.length === 0} className="rounded-md px-7 py-3 text-sm font-bold uppercase tracking-[.12em]">Submit answer<ArrowRight className="size-4" /></Button> : <Button onClick={onAdvance} className="rounded-md px-7 py-3 text-sm font-bold uppercase tracking-[.12em]">{!answered && !retryUsed ? "Try once more" : index === 4 ? "Finish mission" : "Next question"}<ArrowRight className="size-4" /></Button>}</div></div><p className="mt-4 text-center text-xs font-mono text-muted-foreground">Pass mark · 4 / 5</p></section>;
+  return (
+    <section className="sweep-in mx-auto max-w-3xl py-4">
+      {/* Quiz Top Status */}
+      <div className="mb-5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex size-11 items-center justify-center border-2 border-[#00959a] bg-white text-[#00959a] text-lg font-bold rounded-xl shadow-sm">
+            {level.emblem}
+          </div>
+          <span>
+            <span className="block text-xs font-bold uppercase tracking-[.15em] text-[#00959a]">Knowledge check</span>
+            <span className="block text-sm text-[#02373d] font-bold">{level.hero}</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-mono font-bold tabular-nums text-[#02373d]">{index + 1} / 5</span>
+          {streak >= 2 && (
+            <span className="flex items-center gap-1 text-sm font-bold text-[#ff6164]">
+              <Flame className="size-4" />
+              {streak}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <Progress value={((index + 1) / 5) * 100} className="mb-6 h-2 bg-white/80 border border-[#00959a]/30" />
+
+      {/* Main Question Card with Crisp White BG & Dark Legible Text */}
+      <div className="rounded-2xl border-2 border-[#00959a]/30 bg-white p-6 sm:p-9 shadow-xl">
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="display-font max-w-2xl text-2xl font-extrabold leading-snug sm:text-3xl text-[#02373d] tracking-tight">
+            {question.stem}
+          </h1>
+          <CircleHelp className="mt-1 size-6 shrink-0 text-[#00959a]" />
+        </div>
+
+        {question.type === "multi" && (
+          <p className="mt-3 text-sm text-[#034a52] font-semibold">Select every correct answer.</p>
+        )}
+
+        {/* Options List */}
+        <div className="mt-6 grid gap-3.5">
+          {question.options.map((option, optIdx) => {
+            const isSelected = selected.includes(option);
+            const isCorrectChoice = question.correctAnswers.includes(option);
+            const showStatus = answered !== null;
+
+            let stateClass = "border-[#00959a]/30 bg-[#defcf9]/20 hover:border-[#00959a] hover:bg-[#defcf9]/50 text-[#02373d]";
+            if (showStatus) {
+              if (isCorrectChoice) {
+                stateClass = "border-emerald-600 bg-emerald-50 text-emerald-950 font-bold shadow-sm";
+              } else if (isSelected && !isCorrectChoice) {
+                stateClass = "border-[#ff6164] bg-rose-50 text-[#02373d] shadow-sm";
+              }
+            } else if (isSelected) {
+              stateClass = "border-[#00959a] bg-[#defcf9] text-[#02373d] shadow-sm font-bold ring-2 ring-[#00959a]/40";
+            }
+
+            return (
+              <button
+                key={option}
+                onClick={() => onSelect(option)}
+                disabled={answered !== null}
+                className={`group flex min-h-16 w-full items-center gap-4 border-2 px-4 py-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5 rounded-xl ${stateClass}`}
+              >
+                <span
+                  className={`flex size-8 shrink-0 items-center justify-center border-2 text-xs font-black rounded-lg transition-colors ${
+                    isSelected
+                      ? "border-[#00959a] bg-[#00959a] text-white"
+                      : "border-[#00959a]/40 text-[#02373d] bg-white font-bold"
+                  }`}
+                >
+                  {String.fromCharCode(65 + optIdx)}
+                </span>
+                <span className="flex-1 text-base sm:text-lg leading-6 font-semibold text-[#02373d]">{option}</span>
+                {showStatus && isCorrectChoice && (
+                  <Check className="size-6 shrink-0 text-emerald-600 font-black" aria-label="Correct choice" />
+                )}
+                {showStatus && isSelected && !isCorrectChoice && (
+                  <X className="size-6 shrink-0 text-[#ff6164] font-black" aria-label="Incorrect choice" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Feedback Section */}
+        {answered !== null && (
+          <div
+            role="status"
+            className={`mt-6 border-l-4 p-5 rounded-r-xl ${
+              answered
+                ? "border-emerald-500 bg-emerald-50 text-emerald-950"
+                : "border-[#ff6164] bg-rose-50 text-rose-950"
+            }`}
+          >
+            <p className="flex items-center gap-2.5 text-base font-bold text-[#02373d]">
+              {answered ? (
+                <>
+                  <Check className="size-5 text-emerald-600" />
+                  Correct. You are ready to continue.
+                </>
+              ) : (
+                <>
+                  <RotateCcw className="size-5 text-[#ff6164]" />
+                  {retryUsed ? "Not quite — review the concept." : "Not quite — one retry available."}
+                </>
+              )}
+            </p>
+            <p className="mt-2.5 text-sm sm:text-base leading-relaxed text-[#02373d] font-medium">
+              {question.explanation}
+            </p>
+            {question.type === "multi" && (
+              <p className="mt-2 text-xs text-[#034a52] font-semibold">
+                Correct choices are marked with a check; incorrect selections show an X.
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Submit / Next Button */}
+        <div className="mt-7 flex justify-end">
+          {answered === null ? (
+            <Button
+              onClick={onSubmit}
+              disabled={selected.length === 0}
+              className="rounded-xl px-7 py-3 text-sm font-bold uppercase tracking-[.12em] bg-[#00959a] hover:bg-[#02373d] text-white shadow-md disabled:opacity-40"
+            >
+              Submit answer
+              <ArrowRight className="size-4" />
+            </Button>
+          ) : (
+            <Button
+              onClick={onAdvance}
+              className="rounded-xl px-7 py-3 text-sm font-bold uppercase tracking-[.12em] bg-[#00959a] hover:bg-[#02373d] text-white shadow-md"
+            >
+              {!answered && !retryUsed ? "Try once more" : index === 4 ? "Finish mission" : "Next question"}
+              <ArrowRight className="size-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <p className="mt-4 text-center text-xs font-mono font-bold text-[#034a52]">Pass mark · 4 / 5</p>
+    </section>
+  );
 }
 
 function UnlockScreen({ level, score, allComplete, onContinue, onArena }: { level: GameLevel; score: number; allComplete: boolean; onContinue: () => void; onArena: () => void }) {
