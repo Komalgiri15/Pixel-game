@@ -386,6 +386,37 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
         </div>
       </div>
 
+      {/* Game Overview Description & Mission Objectives */}
+      <div className="rounded-2xl border border-[#00959a]/40 bg-[#034a52]/60 p-5 sm:p-6 space-y-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#60e1d5] font-bold">⚡ About Transaction Titans</span>
+        </div>
+        <h2 className="font-display text-lg sm:text-xl font-bold text-white">
+          Restore the Valuation Grid Through 4 Tactical Finance Sectors
+        </h2>
+        <p className="text-xs sm:text-sm text-[#defcf9]/80 leading-relaxed max-w-4xl">
+          Welcome to <strong className="text-white">Transaction Titans</strong>, an interactive M&A and valuation learning arena. The grid has gone dark across 4 specialized financial sectors: <em>Comparable Transactions</em>, <em>Deal Consideration</em>, <em>Key Multiples</em>, and <em>Public Sources</em>. As Commander, deploy into each sector, watch the video briefing, master the concepts, and pass each knowledge check to earn power badges and unlock the Final Assessment Arena!
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+          <div className="p-2.5 rounded-lg bg-[#02373d]/80 border border-[#00959a]/30">
+            <span className="text-[10px] font-mono text-[#60e1d5] block font-bold">01 · WATCH</span>
+            <span className="text-[11px] text-[#defcf9]/70">Video briefings per sector</span>
+          </div>
+          <div className="p-2.5 rounded-lg bg-[#02373d]/80 border border-[#00959a]/30">
+            <span className="text-[10px] font-mono text-[#ff6164] block font-bold">02 · ANSWER</span>
+            <span className="text-[11px] text-[#defcf9]/70">Knowledge challenges</span>
+          </div>
+          <div className="p-2.5 rounded-lg bg-[#02373d]/80 border border-[#00959a]/30">
+            <span className="text-[10px] font-mono text-[#ffac88] block font-bold">03 · POWER UP</span>
+            <span className="text-[11px] text-[#defcf9]/70">Earn sector power badges</span>
+          </div>
+          <div className="p-2.5 rounded-lg bg-[#02373d]/80 border border-[#00959a]/30">
+            <span className="text-[10px] font-mono text-[#60e1d5] block font-bold">04 · ARENA</span>
+            <span className="text-[11px] text-[#defcf9]/70">Unlock Final Mastery</span>
+          </div>
+        </div>
+      </div>
+
       {/* Hand Gesture Interactive Prompt Strip */}
       <div className="rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-3">

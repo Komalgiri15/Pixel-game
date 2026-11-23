@@ -16,11 +16,11 @@ export function HeroFigure({ level, compact = false }: { level: GameLevel; compa
   if (level.avatarImage) {
     return (
       <div className={`relative flex shrink-0 items-center justify-center overflow-visible ${compact ? "h-28 w-28" : "h-56 w-44 sm:h-64 sm:w-52"}`} aria-label={`${level.hero} full body avatar`}>
-        <div className={`absolute -inset-2 rounded-2xl bg-gradient-to-b from-primary/10 to-transparent opacity-50 blur-sm pointer-events-none`} />
+        <div className={`absolute -inset-2 rounded-2xl bg-gradient-to-b from-[#00959a]/20 to-transparent opacity-60 blur-md pointer-events-none`} />
         <img
           src={level.avatarImage}
           alt={level.hero}
-          className="relative h-full w-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] mix-blend-screen"
+          className="relative h-full w-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]"
         />
         <span className={`display-font absolute bottom-0 right-1 flex h-7 w-7 items-center justify-center rounded-full border border-current bg-[#02373d]/90 text-xs font-bold shadow-lg ${hue.text}`} aria-hidden="true">
           {level.emblem}
@@ -96,8 +96,8 @@ export function GridMap({
               className={`group relative flex h-auto min-h-36 flex-col items-start justify-between gap-2 overflow-hidden rounded-xl border bg-[#02373d]/90 p-3.5 text-left transition-all hover:-translate-y-1 hover:bg-[#034a52] sm:min-h-40 sm:p-4 ${hue.border} ${locked ? "opacity-50" : "opacity-100 shadow-lg"}`}
             >
               {level.avatarImage && (
-                <div className="absolute right-1 bottom-0 h-32 w-24 pointer-events-none opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all">
-                  <img src={level.avatarImage} alt={level.hero} className="size-full object-contain mix-blend-screen" />
+                <div className="absolute right-1 bottom-0 h-32 w-24 pointer-events-none opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                  <img src={level.avatarImage} alt={level.hero} className="size-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)]" />
                 </div>
               )}
               <span className={`flex w-full items-center justify-between text-[11px] font-mono uppercase tracking-[.16em] ${hue.text}`}>
@@ -142,8 +142,8 @@ export function GridMap({
 }
 
 const levelsForMap = [
-  { number: 1, hero: "Comp Scout", hue: "cyan", emblem: "⌕", avatarImage: "/avatars/comp_scout_full.jpg" },
-  { number: 2, hero: "Deal Shaper", hue: "coral", emblem: "⇄", avatarImage: "/avatars/deal_shaper_full.jpg" },
-  { number: 3, hero: "Multiple Master", hue: "gold", emblem: "×", avatarImage: "/avatars/multiple_master_full.jpg" },
-  { number: 4, hero: "Source Guardian", hue: "mint", emblem: "▤", avatarImage: "/avatars/source_guardian_full.jpg" },
+  { number: 1, hero: "Comp Scout", hue: "cyan", emblem: "⌕", avatarImage: "/avatars/comp_scout_full.png" },
+  { number: 2, hero: "Deal Shaper", hue: "coral", emblem: "⇄", avatarImage: "/avatars/deal_shaper_full.png" },
+  { number: 3, hero: "Multiple Master", hue: "gold", emblem: "×", avatarImage: "/avatars/multiple_master_full.png" },
+  { number: 4, hero: "Source Guardian", hue: "mint", emblem: "▤", avatarImage: "/avatars/source_guardian_full.png" },
 ] as const;
