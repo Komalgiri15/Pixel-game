@@ -294,10 +294,10 @@ function TransactionTitans() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="pointer-events-none fixed inset-0 grid-world energy-grid opacity-25" />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_50%_0%,oklch(0.28_0.07_200/25%),transparent_65%)]" />
-      <header className="relative z-20 flex items-center justify-between border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-md sm:px-8">
+    <main className="relative min-h-screen overflow-hidden bg-[#defcf9] text-[#02373d]">
+      <div className="pointer-events-none fixed inset-0 grid-world energy-grid opacity-20" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_50%_0%,oklch(0.605_0.118_197.6/10%),transparent_65%)]" />
+      <header className="relative z-20 flex items-center justify-between border-b border-[#00959a]/25 bg-[#defcf9]/90 px-4 py-3 backdrop-blur-md sm:px-8 shadow-sm">
         <button onClick={() => setScreen("hub")} className="flex items-center gap-3 text-left" aria-label="Go to Valuation Grid">
           <div className="flex size-9 items-center justify-center border border-energy/50 bg-accent/70 text-energy"><Shield className="size-5" /></div>
           <span><span className="display-font block text-xs font-bold uppercase tracking-[.12em]">Transaction Titans</span><span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">The Valuation Force</span></span>
@@ -342,41 +342,41 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
   return (
     <section className="sweep-in grid min-h-[calc(100vh-130px)] items-center gap-8 lg:grid-cols-[1fr_1.1fr] py-6">
       <div className="relative z-10 max-w-xl py-4 space-y-6">
-        <div className="inline-flex items-center gap-2 border-l-2 border-primary px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-[.2em] text-[#60e1d5]">
-          <span className="size-2 animate-pulse rounded-full bg-[#60e1d5]" />
+        <div className="inline-flex items-center gap-2 border-l-2 border-[#00959a] px-3 py-1 text-[11px] font-mono font-bold uppercase tracking-[.2em] text-[#00959a] bg-white/80 rounded-r-md shadow-sm">
+          <span className="size-2 animate-pulse rounded-full bg-[#00959a]" />
           Operation: Restore the Grid
         </div>
 
-        <h1 className="display-font text-4xl sm:text-6xl font-extrabold leading-[1.08] text-white">
+        <h1 className="display-font text-4xl sm:text-6xl font-extrabold leading-[1.08] text-[#02373d]">
           Transaction<br />
-          <span className="text-[#60e1d5]">Titans</span>
+          <span className="text-[#00959a]">Titans</span>
           <span className="text-[#ff6164]">:</span><br />
-          <span className="text-xl sm:text-3xl font-semibold text-[#defcf9]/80 font-sans">
+          <span className="text-xl sm:text-3xl font-semibold text-[#034a52] font-sans">
             The Valuation Force
           </span>
         </h1>
 
-        <p className="text-sm sm:text-base leading-relaxed text-[#defcf9]/70">
+        <p className="text-sm sm:text-base leading-relaxed text-[#034a52] font-medium">
           The Valuation Grid has fallen dark. Four sectors. Four Titans. Choose your path, master M&A deal valuation through video briefings, and light the Core.
         </p>
 
         {/* Interactive Steps Cues */}
         <div className="grid grid-cols-4 gap-2 text-center text-xs">
-          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+          <div className="p-2.5 rounded-lg border border-[#00959a]/30 bg-white/80 shadow-sm">
             <span className="text-base block mb-0.5">📹</span>
-            <span className="text-[10px] font-mono uppercase text-[#60e1d5] font-bold">Watch</span>
+            <span className="text-[10px] font-mono uppercase text-[#00959a] font-bold">Watch</span>
           </div>
-          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+          <div className="p-2.5 rounded-lg border border-[#ff6164]/30 bg-white/80 shadow-sm">
             <span className="text-base block mb-0.5">👆</span>
             <span className="text-[10px] font-mono uppercase text-[#ff6164] font-bold">Answer</span>
           </div>
-          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+          <div className="p-2.5 rounded-lg border border-[#ffac88]/40 bg-white/80 shadow-sm">
             <span className="text-base block mb-0.5">⚡</span>
-            <span className="text-[10px] font-mono uppercase text-[#ffac88] font-bold">Power Up</span>
+            <span className="text-[10px] font-mono uppercase text-[#ff7c6b] font-bold">Power Up</span>
           </div>
-          <div className="p-2.5 rounded-lg border border-[#00959a]/40 bg-[#034a52]/50">
+          <div className="p-2.5 rounded-lg border border-[#00959a]/30 bg-white/80 shadow-sm">
             <span className="text-base block mb-0.5">🏆</span>
-            <span className="text-[10px] font-mono uppercase text-[#60e1d5] font-bold">Arena</span>
+            <span className="text-[10px] font-mono uppercase text-[#00959a] font-bold">Arena</span>
           </div>
         </div>
 
@@ -384,7 +384,7 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
         <div className="flex flex-wrap gap-3 pt-2">
           <Button
             onClick={onStart}
-            className="h-12 px-7 rounded-xl bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#60e1d5]/25 gap-2"
+            className="h-12 px-7 rounded-xl bg-[#00959a] text-white hover:bg-[#02373d] font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#00959a]/25 gap-2"
           >
             <Sparkles className="size-4" />
             {hasProgress ? "Deploy to Mission" : "Start Mission"}
@@ -395,7 +395,7 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
             <Button
               variant="outline"
               onClick={onContinue}
-              className="h-12 px-5 rounded-xl border-[#00959a] text-[#defcf9] hover:bg-[#034a52] text-xs font-bold uppercase tracking-wider"
+              className="h-12 px-5 rounded-xl border-[#00959a] text-[#02373d] bg-white hover:bg-[#defcf9] text-xs font-bold uppercase tracking-wider shadow-sm"
             >
               Resume Grid · {completedCount}/4 Restored
             </Button>
@@ -409,8 +409,8 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
           </Link>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-[#defcf9]/60">
-          <Headphones className="size-4 text-[#60e1d5]" />
+        <div className="flex items-center gap-3 text-xs text-[#034a52] font-semibold">
+          <Headphones className="size-4 text-[#00959a]" />
           <span>Interactive sound effects & tactical valuation missions</span>
         </div>
       </div>
@@ -419,28 +419,28 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
       <div className="relative flex flex-col items-center justify-center p-4">
         {/* Orbital Background Rings */}
         <div className="absolute size-[340px] sm:size-[440px] rounded-full border border-[#00959a]/20 animate-[spin_60s_linear_infinite]" />
-        <div className="absolute size-[260px] sm:size-[340px] rounded-full border border-dashed border-[#60e1d5]/20 animate-[spin_40s_linear_infinite_reverse]" />
+        <div className="absolute size-[260px] sm:size-[340px] rounded-full border border-dashed border-[#00959a]/30 animate-[spin_40s_linear_infinite_reverse]" />
 
         {/* Central Stand / Active Titan Hologram */}
         <div className="relative flex flex-col items-center justify-center min-h-[340px] w-full">
           {activeTitan.avatarImage && (
             <div className="relative h-64 sm:h-80 w-56 flex items-center justify-center animate-in zoom-in-95 duration-300">
-              <div className="absolute bottom-2 size-40 rounded-full bg-gradient-to-t from-[#60e1d5]/30 to-transparent blur-xl pointer-events-none" />
+              <div className="absolute bottom-2 size-40 rounded-full bg-gradient-to-t from-[#00959a]/30 to-transparent blur-xl pointer-events-none" />
               <img
                 src={activeTitan.avatarImage}
                 alt={activeTitan.hero}
-                className="relative h-full w-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
+                className="relative h-full w-full object-contain filter drop-shadow-[0_15px_30px_rgba(2,55,61,0.25)]"
               />
             </div>
           )}
 
           {/* Active Titan Info Badge */}
-          <div className="mt-2 text-center p-3 rounded-xl border border-[#00959a]/50 bg-[#034a52]/80 backdrop-blur max-w-xs shadow-xl">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#60e1d5] font-bold block">
+          <div className="mt-2 text-center p-3 rounded-xl border border-[#00959a]/40 bg-white/95 backdrop-blur max-w-xs shadow-xl">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#00959a] font-bold block">
               Sector 0{activeTitan.number} Titan
             </span>
-            <span className="font-bold text-white text-base block">{activeTitan.hero}</span>
-            <span className="text-[11px] text-[#defcf9]/70 block mt-0.5">{activeTitan.shortTitle}</span>
+            <span className="font-bold text-[#02373d] text-base block">{activeTitan.hero}</span>
+            <span className="text-[11px] text-[#034a52] block mt-0.5 font-medium">{activeTitan.shortTitle}</span>
           </div>
         </div>
 
@@ -453,10 +453,10 @@ function TitleScreen({ hasProgress, completedCount, onStart, onContinue }: { has
                 key={lvl.number}
                 onMouseEnter={() => setHoveredTitan(idx)}
                 onClick={() => setHoveredTitan(idx)}
-                className={`px-3 py-2 rounded-xl border-2 transition-all flex items-center gap-2 text-xs font-bold ${
+                className={`px-3 py-2 rounded-xl border-2 transition-all flex items-center gap-2 text-xs font-bold shadow-sm ${
                   isHovered
-                    ? "border-[#60e1d5] bg-[#034a52] text-white shadow-[0_0_15px_rgba(96,225,213,0.35)] scale-105"
-                    : "border-[#034a52] bg-[#02373d]/80 text-[#defcf9]/70 hover:border-[#00959a]"
+                    ? "border-[#00959a] bg-white text-[#00959a] shadow-md scale-105"
+                    : "border-[#00959a]/30 bg-white/90 text-[#02373d] hover:border-[#00959a]"
                 }`}
               >
                 <span className="text-base">{lvl.emblem}</span>

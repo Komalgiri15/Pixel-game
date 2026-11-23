@@ -333,10 +333,10 @@ export function InteractiveTitanGuide({
             <button
               key={step.num}
               onClick={() => handleStepSelect(idx)}
-              className={`p-3.5 rounded-2xl border-2 text-left transition-all duration-200 relative overflow-hidden group ${
+              className={`p-3.5 rounded-2xl border-2 text-left transition-all duration-200 relative overflow-hidden group shadow-sm ${
                 isSelected
-                  ? "border-white bg-[#034a52] shadow-xl scale-[1.02]"
-                  : "border-[#00959a]/30 bg-[#02373d]/80 hover:border-[#00959a] hover:bg-[#034a52]/60"
+                  ? "border-[#00959a] bg-white shadow-md scale-[1.02]"
+                  : "border-[#00959a]/30 bg-white/90 hover:border-[#00959a] hover:bg-white"
               }`}
             >
               {/* Top Row: Mini Avatar thumbnail + Number */}
@@ -344,14 +344,14 @@ export function InteractiveTitanGuide({
                 <span
                   className="text-xs font-mono font-bold tracking-wider px-2 py-0.5 rounded-md"
                   style={{
-                    backgroundColor: isSelected ? step.accentColor : "#02373d",
-                    color: isSelected ? "#02373d" : step.accentColor,
+                    backgroundColor: isSelected ? step.accentColor : "#defcf9",
+                    color: isSelected ? "#02373d" : "#02373d",
                   }}
                 >
                   {step.num} · {step.label}
                 </span>
 
-                <div className="size-8 rounded-full overflow-hidden border border-white/20 bg-[#02373d] shrink-0">
+                <div className="size-8 rounded-full overflow-hidden border border-[#00959a]/30 bg-white shrink-0">
                   <img
                     src={step.avatarImg}
                     alt={step.titanName}
@@ -361,10 +361,10 @@ export function InteractiveTitanGuide({
               </div>
 
               {/* Title */}
-              <h4 className="font-bold text-white text-xs sm:text-sm line-clamp-1">
+              <h4 className="font-bold text-[#02373d] text-xs sm:text-sm line-clamp-1">
                 {step.subtitle}
               </h4>
-              <p className="text-[10px] text-[#defcf9]/60 line-clamp-1 mt-0.5">
+              <p className="text-[10px] text-[#034a52]/80 line-clamp-1 mt-0.5 font-medium">
                 {step.titanName}
               </p>
 
