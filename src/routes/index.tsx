@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeft, ArrowRight, AudioLines, Award, BadgeCheck, Check, ChevronRight,
   CircleHelp, FileBadge, Flame, Headphones, LockKeyhole, Maximize2, Pause,
@@ -286,6 +286,12 @@ function TransactionTitans() {
           <span><span className="display-font block text-xs font-bold uppercase tracking-[.12em]">Transaction Titans</span><span className="hidden text-[10px] uppercase tracking-[.18em] text-muted-foreground sm:block">The Valuation Force</span></span>
         </button>
         <div className="flex items-center gap-2 sm:gap-4">
+          <Link
+            to="/minimal"
+            className="hidden items-center gap-1.5 rounded-sm border border-energy/60 bg-accent/60 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-energy hover:bg-accent transition-colors sm:flex"
+          >
+            <Sparkles className="size-3.5" /> Minimal Edition
+          </Link>
           <div className="hidden items-center gap-2 rounded-sm border border-border bg-card/75 px-3 py-2 sm:flex"><Sparkles className="size-3.5 text-primary" /><span className="text-xs font-semibold tabular-nums">{xp.toLocaleString()} XP</span></div>
           <div className="hidden items-center gap-1.5 text-xs text-muted-foreground sm:flex"><BadgeCheck className="size-4 text-hero-gold" />{progress.badges.length}/4</div>
           <Button variant="ghost" size="icon" onClick={() => setSoundOn((value) => !value)} aria-label={soundOn ? "Mute sound" : "Enable sound"} title={soundOn ? "Mute sound" : "Enable sound"}>{soundOn ? <Volume2 /> : <VolumeX />}</Button>
