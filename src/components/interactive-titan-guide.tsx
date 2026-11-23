@@ -96,12 +96,13 @@ export function InteractiveTitanGuide({
   onSelectSector?: (index: number) => void;
 }) {
   const [activeStep, setActiveStep] = useState(0);
-  const [voiceActive, setVoiceActive] = useState(() => voice.isVoiceEnabled());
+  const [voiceActive, setVoiceActive] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const current = GUIDE_STEPS[activeStep] ?? GUIDE_STEPS[0]!;
 
   useEffect(() => {
+    setVoiceActive(voice.isVoiceEnabled());
     return voice.subscribe((speaking) => setIsSpeaking(speaking));
   }, []);
 
