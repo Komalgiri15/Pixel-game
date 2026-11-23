@@ -9,9 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { HeroFigure, GridMap } from "@/components/game-ui";
-import {
-  PointGestureSvg, ThumbsUpGestureSvg, WaveGestureSvg, VictoryGestureSvg
-} from "@/components/gesture-animations";
+import { AutoGestureShowcase, GestureGuideModal } from "@/components/gesture-showcase";
 import {
   arenaQuestions, levels, premiumFormula, transactionValueFormula, universeFactors, valuationSteps,
   type GameLevel, type GameQuestion,
@@ -528,23 +526,23 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
         </div>
       </div>
 
-      {/* Hand Gesture Interactive Prompt Strip */}
-      <div className="rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-3">
-          <span className="text-xl p-1.5 rounded-lg bg-[#02373d] border border-[#00959a]/40">👋</span>
-          <div>
-            <strong className="text-white block">Hand Gesture Controls Active:</strong>
-            <span className="text-[#defcf9]/70">👆 Point to select options • 👍 Thumbs up to submit • 👋 Wave open palm to advance</span>
-          </div>
+      {/* Hand Gesture Auto-Cycling Strip: Showing 1 by 1 Automatically */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-mono text-[#60e1d5] uppercase font-bold tracking-wider flex items-center gap-2">
+            <span>⚡</span>
+            <span>How to Play with Hand Gestures</span>
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setGestureGuideOpen(true)}
+            className="text-xs text-[#60e1d5] hover:text-white h-7 px-2 font-semibold"
+          >
+            Expand Card View ↗
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setGestureGuideOpen(true)}
-          className="text-xs text-[#60e1d5] hover:text-white shrink-0 font-semibold"
-        >
-          View Gesture Cards →
-        </Button>
+        <AutoGestureShowcase autoAdvanceMs={3500} />
       </div>
 
       {/* Main Grid View: Left Map, Right Focus Hero Preview */}
@@ -609,75 +607,7 @@ function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { 
       </div>
 
       {/* Gesture Guide Modal */}
-      {gestureGuideOpen && (
-        <div className="fixed inset-0 z-50 bg-[#02373d]/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg rounded-2xl border-2 border-[#00959a] bg-[#02373d] p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#034a52] pb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">👋</span>
-                <h3 className="font-display font-bold text-white text-base">How to Play with Hand Gestures</h3>
-              </div>
-              <button onClick={() => setGestureGuideOpen(false)} className="text-[#defcf9]/60 hover:text-white text-sm">✕</button>
-            </div>
-
-            <div className="space-y-3">
-              <div className="p-3.5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <PointGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">1. Point / Index Finger</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">Keys 1, 2, 3, 4</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#60e1d5]">Select Option [A, B, C, D]</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Point your index finger up toward the choice to highlight and select it.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#ff6164]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <ThumbsUpGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">2. Thumbs Up</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#ff6164] border border-[#ff6164]/40">Enter Key</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#ff6164]">Confirm & Submit Answer</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Flash a clear thumbs-up gesture to lock in your answer.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <WaveGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">3. Open Palm / Wave</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">Space Key</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#60e1d5]">Advance to Next Challenge</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Wave open palm sideways to progress to the next mission question.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#ffac88]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <VictoryGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">4. Victory / Peace Sign</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#ffac88] border border-[#ffac88]/40">Key [P]</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#ffac88]">Toggle Video Play / Pause</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Hold up two fingers to pause or resume the tactical briefing video.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-right pt-2">
-              <Button onClick={() => setGestureGuideOpen(false)} className="bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold text-xs px-5">
-                Ready to Play!
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <GestureGuideModal isOpen={gestureGuideOpen} onClose={() => setGestureGuideOpen(false)} />
     </section>
   );
 }

@@ -7,9 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { levels, arenaQuestions, type GameLevel, type GameQuestion } from "@/data/game-content";
-import {
-  PointGestureSvg, ThumbsUpGestureSvg, WaveGestureSvg, VictoryGestureSvg
-} from "@/components/gesture-animations";
+import { AutoGestureShowcase, GestureGuideModal } from "@/components/gesture-showcase";
 
 export const Route = createFileRoute("/minimal")({
   head: () => ({
@@ -252,27 +250,23 @@ export function MinimalGame() {
               })}
             </div>
 
-            {/* Hand Gesture Banner */}
-            <div className="p-5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4 text-center sm:text-left">
-                <div className="size-12 rounded-xl bg-[#00959a]/30 border border-[#60e1d5]/50 flex items-center justify-center text-2xl shrink-0">
-                  👋
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-sm">Play with Hands or Clicks</h4>
-                  <p className="text-xs text-[#defcf9]/70 mt-0.5">
-                    Start with simple gestures: 👆 Point to pick, 👍 Thumbs-up to submit, 👋 Wave to continue.
-                  </p>
-                </div>
+            {/* Auto Gesture Showcase Appearing One by One */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-mono text-[#60e1d5] uppercase font-bold tracking-wider flex items-center gap-2">
+                  <span>⚡</span>
+                  <span>Hand Gesture Controls</span>
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setGestureGuideOpen(true)}
+                  className="text-xs text-[#60e1d5] hover:text-white h-7 px-2 font-semibold"
+                >
+                  Modal View ↗
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setGestureGuideOpen(true)}
-                className="border-[#60e1d5] text-[#60e1d5] hover:bg-[#60e1d5] hover:text-[#02373d] text-xs font-semibold shrink-0"
-              >
-                View Gesture Guide
-              </Button>
+              <AutoGestureShowcase autoAdvanceMs={3500} />
             </div>
 
             {/* Sector Selector */}
@@ -520,92 +514,7 @@ export function MinimalGame() {
       </main>
 
       {/* Hand Gesture Modal Guide */}
-      {gestureGuideOpen && (
-        <div className="fixed inset-0 z-50 bg-[#02373d]/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg rounded-2xl border-2 border-[#00959a] bg-[#02373d] p-6 sm:p-7 space-y-5 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#034a52] pb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="size-9 rounded-lg bg-[#00959a]/30 border border-[#60e1d5]/50 flex items-center justify-center text-xl">
-                  👋
-                </div>
-                <div>
-                  <h3 className="font-display font-bold text-white text-lg">Hand Gestures Guide</h3>
-                  <p className="text-xs text-[#defcf9]/60">How to control the minimal game with physical gestures</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setGestureGuideOpen(false)}
-                className="text-[#defcf9]/60 hover:text-white text-sm px-2 py-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <div className="p-3.5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <PointGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">1. Point / Index Finger</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">Keys 1, 2, 3, 4</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#60e1d5]">Select Option [A, B, C, D]</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Point your index finger up to highlight or click directly on any mission card.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#ff6164]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <ThumbsUpGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">2. Thumbs Up</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#ff6164] border border-[#ff6164]/40">Enter Key</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#ff6164]">Confirm & Submit Answer</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Flash a clear thumbs-up gesture to lock in your selected choice.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <WaveGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">3. Open Palm / Wave</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">Space Key</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#60e1d5]">Next Question or Continue</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Wave open palm sideways to advance seamlessly to the next challenge.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#ffac88]/40 bg-[#034a52]/50 flex items-center gap-4">
-                <VictoryGestureSvg className="size-16 shrink-0" />
-                <div className="space-y-0.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-white text-sm">4. Victory / Peace Sign</h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#ffac88] border border-[#ffac88]/40">Key [P]</span>
-                  </div>
-                  <p className="text-xs font-semibold text-[#ffac88]">Toggle Video Play / Pause</p>
-                  <p className="text-[11px] text-[#defcf9]/70">Hold two fingers up to pause or resume the tactical briefing video.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#034a52] border border-[#00959a]/30 text-xs text-[#defcf9]/80 leading-relaxed">
-              💡 <strong className="text-white">Quick Start Tip:</strong> You can play naturally by clicking or tapping on screen, or follow the gesture cues (👆 Point, 👍 Thumbs Up, 👋 Wave) as an intuitive physical interaction model!
-            </div>
-
-            <div className="text-right">
-              <Button
-                onClick={() => setGestureGuideOpen(false)}
-                className="bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold px-6"
-              >
-                Got It, Let&apos;s Play!
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <GestureGuideModal isOpen={gestureGuideOpen} onClose={() => setGestureGuideOpen(false)} />
     </div>
   );
 }
