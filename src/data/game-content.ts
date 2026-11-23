@@ -19,6 +19,7 @@ export type GameLevel = {
   emblem: string;
   callouts: string[];
   videoSrc?: string;
+  avatarImage?: string;
   questions: GameQuestion[];
 };
 
@@ -48,6 +49,7 @@ export const levels: GameLevel[] = [
     emblem: "⌕",
     callouts: ["Comparable universe", "Control premium", "Source documentation"],
     videoSrc: "https://lesson-banners.s3.us-east-1.amazonaws.com/Videos/Topic+1+-+Transaction+Comparable+Analysis+-+working+(1).mp4",
+    avatarImage: "/avatars/comp_scout_full.jpg",
     questions: [
       single("L1-01", "What does transaction comps analysis infer?", "Value from public transaction information and the price paid", ["Value from a company's daily stock-price movement", "Value from forecast revenue alone", "Value from the cost of replacing company assets"], "Transaction comps infer value from information about public transactions and the prices paid."),
       single("L1-02", "Which advantage does transaction comps capture?", "The control premium", ["A guaranteed future return", "The target's standalone book value", "The acquirer's cost of debt"], "A transaction price can reflect a control premium paid to acquire a company."),
@@ -66,6 +68,7 @@ export const levels: GameLevel[] = [
     emblem: "⇄",
     callouts: ["Announcement date", "Offer value", "Transaction value"],
     videoSrc: "https://lesson-banners.s3.us-east-1.amazonaws.com/Videos/Topic+2+-++Understanding+Deal+Consideration+(1).mp4",
+    avatarImage: "/avatars/deal_shaper_full.jpg",
     questions: [
       single("L2-01", "Which date distinguishes a deal announcement from a rumor?", "Announcement Date", ["Date Completed", "A rumor date", "The target's fiscal year-end"], "The transaction overview records the Announcement Date, distinct from a rumor date."),
       single("L2-02", "Which expression gives Transaction Value?", "Offer Value + debt + preferred stock + minority interest − cash", ["Offer Value − debt − preferred stock − minority interest + cash", "Offer Value + cash − debt", "Offer Value × debt × preferred stock"], "The stated formula adds debt, preferred stock and minority interest to Offer Value, then subtracts cash."),
@@ -84,6 +87,7 @@ export const levels: GameLevel[] = [
     emblem: "×",
     callouts: ["LTM calculation", "Premium", "7.0x–8.0x range"],
     videoSrc: "https://lesson-banners.s3.us-east-1.amazonaws.com/Videos/Topic+3+-+Calculation+of+Key+Transaction+Multiples.mp4",
+    avatarImage: "/avatars/multiple_master_full.jpg",
     questions: [
       single("L3-01", "What does LTM represent?", "Latest twelve months", ["Last transaction multiple", "Lowest target market value", "Long-term merger"], "LTM refers to the latest twelve months used in a financial measure."),
       single("L3-02", "Which expression calculates LTM?", "Latest fiscal year + current stub − prior stub ± extraordinary/nonrecurring items", ["Latest fiscal year − current stub + prior stub", "Current stub + prior stub only", "Offer Price ÷ Target Price"], "The LTM formula adjusts the latest fiscal year with the current and prior stub periods and extraordinary or nonrecurring items."),
@@ -102,6 +106,7 @@ export const levels: GameLevel[] = [
     emblem: "▤",
     callouts: ["Public targets", "Filing-date timing", "Source pros & cons"],
     videoSrc: "https://lesson-banners.s3.us-east-1.amazonaws.com/Videos/Topic+4+%E2%80%94+Key+Sources+Opening.mp4",
+    avatarImage: "/avatars/source_guardian_full.jpg",
     questions: [
       single("L4-01", "Which documents support public-target analysis in this brief?", "Offer document, annual report, press release, proxy, tender offer and filings", ["Only an informal rumor", "Only an acquirer's share-price chart", "Only a list of private-company divisions"], "The brief lists these six documents as sources supporting public-target analysis."),
       single("L4-02", "When selecting information for a deal analysis, what timing does the brief call out?", "Filing-date timing", ["A date chosen after the analysis is complete", "A date unrelated to the transaction", "A forecast date not in the source"], "Filing-date timing is explicitly identified as a source consideration in the brief."),

@@ -12,6 +12,23 @@ const hueStyles = {
 
 export function HeroFigure({ level, compact = false }: { level: GameLevel; compact?: boolean }) {
   const hue = hueStyles[level.hue];
+  
+  if (level.avatarImage) {
+    return (
+      <div className={`relative flex shrink-0 items-center justify-center overflow-visible ${compact ? "h-28 w-28" : "h-56 w-44 sm:h-64 sm:w-52"}`} aria-label={`${level.hero} full body avatar`}>
+        <div className={`absolute -inset-2 rounded-2xl bg-gradient-to-b from-primary/10 to-transparent opacity-50 blur-sm pointer-events-none`} />
+        <img
+          src={level.avatarImage}
+          alt={level.hero}
+          className="relative h-full w-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] mix-blend-screen"
+        />
+        <span className={`display-font absolute bottom-0 right-1 flex h-7 w-7 items-center justify-center rounded-full border border-current bg-[#02373d]/90 text-xs font-bold shadow-lg ${hue.text}`} aria-hidden="true">
+          {level.emblem}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className={`relative flex shrink-0 items-center justify-center ${compact ? "h-24 w-24" : "h-44 w-44 sm:h-52 sm:w-52"}`} aria-label={`${level.hero} hero emblem`}>
       <div className={`absolute inset-[8%] rounded-full border ${hue.border} opacity-70`} />
@@ -58,12 +75,11 @@ export function GridMap({
   return (
     <div className="relative mx-auto w-full max-w-[820px] overflow-hidden rounded-lg border border-border/70 bg-background/35 px-3 py-6 sm:px-8 sm:py-9" aria-label="Valuation Grid map">
       <div className="energy-grid grid-world absolute inset-0 opacity-70" />
-      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-80" viewBox="0 0 800 440" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M160 102 400 214 640 102M160 338 400 214 640 338M160 102 160 338M640 102 640 338" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-energy" strokeDasharray="7 8" />
-        <circle cx="400" cy="214" r="82" fill="none" stroke="currentColor" strokeWidth="1" className="text-energy signal-pulse" />
-        <circle cx="400" cy="214" r="112" fill="none" stroke="currentColor" strokeWidth="1" className="text-energy" strokeDasharray="2 9" />
+      <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-40" viewBox="0 0 800 440" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M160 102 400 214 640 102M160 338 400 214 640 338" fill="none" stroke="currentColor" strokeWidth="1" className="text-energy/50" strokeDasharray="6 6" />
+        <circle cx="400" cy="214" r="82" fill="none" stroke="currentColor" strokeWidth="1" className="text-energy/40" />
       </svg>
-      <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-[1fr_1.2fr_1fr] sm:items-center sm:gap-x-7 sm:gap-y-5">
+      <div className="relative grid grid-cols-2 gap-4 sm:grid-cols-[1fr_1.1fr_1fr] sm:items-center sm:gap-x-6 sm:gap-y-6">
         {[0, 1, 2, 3].map((index) => {
           const level = levelsForMap[index];
           if (!level) return null;
@@ -77,15 +93,19 @@ export function GridMap({
               disabled={locked}
               aria-label={`Mission ${level.number}: ${level.hero}, ${status.replace("_", " ")}`}
               onClick={() => onSelect(index)}
-              className={`group relative flex h-auto min-h-32 flex-col items-start justify-between gap-3 overflow-hidden rounded-sm border bg-background/85 p-3 text-left transition-all hover:-translate-y-1 hover:bg-accent/80 sm:min-h-36 sm:p-4 ${hue.border} ${locked ? "opacity-45" : "opacity-100"} ${status === "complete" ? "shadow-[0_0_24px_color-mix(in_oklab,var(--hero-cyan)_12%,transparent)]" : ""}`}
+              className={`group relative flex h-auto min-h-36 flex-col items-start justify-between gap-2 overflow-hidden rounded-xl border bg-[#02373d]/90 p-3.5 text-left transition-all hover:-translate-y-1 hover:bg-[#034a52] sm:min-h-40 sm:p-4 ${hue.border} ${locked ? "opacity-50" : "opacity-100 shadow-lg"}`}
             >
-              <span className={`absolute -right-2 -top-5 font-display text-7xl font-bold opacity-[.09] ${hue.text}`}>0{level.number}</span>
-              <span className={`flex w-full items-center justify-between text-[10px] font-semibold uppercase tracking-[.16em] ${hue.text}`}>
+              {level.avatarImage && (
+                <div className="absolute right-1 bottom-0 h-32 w-24 pointer-events-none opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all">
+                  <img src={level.avatarImage} alt={level.hero} className="size-full object-contain mix-blend-screen" />
+                </div>
+              )}
+              <span className={`flex w-full items-center justify-between text-[11px] font-mono uppercase tracking-[.16em] ${hue.text}`}>
                 <span>Sector 0{level.number}</span><StatusMark status={status} />
               </span>
-              <span className="relative block">
-                <span className="block text-sm font-semibold text-foreground sm:text-base">{level.hero}</span>
-                <span className="mt-1 block text-[11px] capitalize text-muted-foreground">{status.replace("_", " ")}</span>
+              <span className="relative z-10 block max-w-[65%]">
+                <span className="block text-sm font-bold text-white sm:text-base">{level.hero}</span>
+                <span className="mt-1 block text-[11px] text-[#defcf9]/70 capitalize">{status.replace("_", " ")}</span>
               </span>
             </Button>
           );
@@ -122,8 +142,8 @@ export function GridMap({
 }
 
 const levelsForMap = [
-  { number: 1, hero: "Comp Scout", hue: "cyan", emblem: "⌕" },
-  { number: 2, hero: "Deal Shaper", hue: "coral", emblem: "⇄" },
-  { number: 3, hero: "Multiple Master", hue: "gold", emblem: "×" },
-  { number: 4, hero: "Source Guardian", hue: "mint", emblem: "▤" },
+  { number: 1, hero: "Comp Scout", hue: "cyan", emblem: "⌕", avatarImage: "/avatars/comp_scout_full.jpg" },
+  { number: 2, hero: "Deal Shaper", hue: "coral", emblem: "⇄", avatarImage: "/avatars/deal_shaper_full.jpg" },
+  { number: 3, hero: "Multiple Master", hue: "gold", emblem: "×", avatarImage: "/avatars/multiple_master_full.jpg" },
+  { number: 4, hero: "Source Guardian", hue: "mint", emblem: "▤", avatarImage: "/avatars/source_guardian_full.jpg" },
 ] as const;

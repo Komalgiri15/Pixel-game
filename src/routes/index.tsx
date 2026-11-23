@@ -356,18 +356,172 @@ function StoryScreen({ panel, onNext, onSkip }: { panel: number; onNext: () => v
 }
 
 function HubScreen({ progress, statuses, restored, xp, arenaOpen, onSelect }: { progress: GameProgress; statuses: GameProgress["levels"][number]["status"][]; restored: number; xp: number; arenaOpen: boolean; onSelect: (index: number) => void }) {
+  const [gestureGuideOpen, setGestureGuideOpen] = useState(false);
   const inProgress = progress.levels.findIndex((item) => item.status === "in_progress");
   const nextAvailable = progress.levels.findIndex((item) => item.status === "available");
   const focusIndex = inProgress >= 0 ? inProgress : nextAvailable;
   const focus = (focusIndex >= 0 ? levels[focusIndex] : undefined) ?? levels[0]!;
-  return <section className="sweep-in">
-    <div className="mb-8 flex flex-col justify-between gap-5 border-b border-border/70 pb-6 sm:flex-row sm:items-end"><div><p className="text-[10px] font-bold uppercase tracking-[.2em] text-energy">Mission Control · Valuation Grid</p><h1 className="display-font mt-2 text-3xl font-bold sm:text-4xl">Welcome back, Commander.</h1><p className="mt-2 text-sm text-muted-foreground">The Grid is {restored}% restored. {arenaOpen ? "The Arena is ready." : "Your next sector is waiting."}</p></div><div className="flex gap-3"><StatChip icon={<Sparkles className="size-4 text-primary" />} label="Force XP" value={xp.toLocaleString()} /><StatChip icon={<BadgeCheck className="size-4 text-hero-gold" />} label="Badges" value={`${progress.badges.length}/4`} /></div></div>
-    <div className="grid gap-8 xl:grid-cols-[1.2fr_.8fr]"><div><div className="mb-3 flex items-center justify-between"><h2 className="display-font text-sm font-semibold uppercase tracking-[.14em]">Sector map</h2><span className="text-[10px] uppercase tracking-[.12em] text-muted-foreground">Select an available sector</span></div><GridMap statuses={statuses} badges={progress.badges} onSelect={onSelect} arenaUnlocked={arenaOpen} /></div>
-    <div className="flex flex-col gap-6"><div className="glass-panel relative overflow-hidden p-5 sm:p-6"><div className="absolute right-3 top-0 h-full w-1 bg-primary/70" /><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.18em] text-primary">{focusIndex >= 0 ? `Recommended · Sector 0${focus.number}` : "All sectors restored"}</span><Flame className="size-4 text-hero-coral" /></div><div className="mt-3 flex items-center gap-2"><HeroFigure level={focus} compact /><div><h3 className="display-font text-xl font-bold">{focus.hero}</h3><p className="mt-1 text-sm text-muted-foreground">{focus.title}</p></div></div><p className="mt-3 text-sm leading-6 text-muted-foreground">{focus.goal}</p>{focusIndex >= 0 ? <Button onClick={() => onSelect(focusIndex)} className="mt-5 w-full rounded-sm text-xs font-bold uppercase tracking-[.12em]">{inProgress >= 0 ? "Resume mission" : "Enter sector"}<ArrowRight className="size-4" /></Button> : <Button onClick={() => onSelect(4)} disabled={!arenaOpen} className="mt-5 w-full rounded-sm text-xs font-bold uppercase tracking-[.12em]">{arenaOpen ? "Enter final arena" : "Sector complete"}<ArrowRight className="size-4" /></Button>}</div>
-    <div className="border-t border-border/60 pt-5"><div className="mb-3 flex justify-between text-xs"><span className="font-medium">Grid restoration</span><span className="tabular-nums text-energy">{restored}%</span></div><Progress value={restored} className="h-1.5 bg-secondary" /><div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3">{levels.map((level, index) => <div key={level.number} className="flex items-center gap-2 border-b border-border/45 pb-2"><span className={`flex size-7 items-center justify-center border text-xs ${progress.badges.includes(index + 1) ? `border-hero-${level.hue}/50 text-hero-${level.hue}` : "border-border text-muted-foreground"}`}>{progress.badges.includes(index + 1) ? level.emblem : <LockKeyhole className="size-3" />}</span><span className="min-w-0"><span className="block truncate text-[11px] font-semibold">{level.hero}</span><span className="block text-[10px] capitalize text-muted-foreground">{progress.levels[index]?.status.replace("_", " ")}</span></span></div>)}</div></div>
-    <div className="border-t border-border/60 pt-5"><p className="mb-3 text-[10px] font-bold uppercase tracking-[.15em] text-muted-foreground">Mission protocol</p><div className="grid grid-cols-4 gap-2">{["Watch", "Answer", "Power up", "Advance"].map((label, index) => <div key={label} className="flex flex-col gap-2 text-[10px] text-muted-foreground"><span className={`flex size-7 items-center justify-center border ${index < completedCountSafe(progress) ? "border-energy/50 text-energy" : "border-border"}`}>{index < completedCountSafe(progress) ? <Check className="size-3" /> : `0${index + 1}`}</span>{label}</div>)}</div></div>
-    </div></div>
-  </section>;
+
+  return (
+    <section className="sweep-in max-w-6xl mx-auto space-y-6">
+      {/* Header bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#034a52] pb-5">
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-[.2em] text-[#60e1d5]">Mission Control · Valuation Grid</p>
+          <h1 className="display-font mt-1 text-2xl sm:text-3xl font-extrabold text-white">Welcome back, Commander.</h1>
+          <p className="mt-1 text-xs text-[#defcf9]/70">The Grid is {restored}% restored. {arenaOpen ? "The Arena is ready." : "Your next sector is waiting."}</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setGestureGuideOpen(true)}
+            className="border-[#00959a] bg-[#034a52]/40 text-[#60e1d5] hover:bg-[#00959a] hover:text-white text-xs font-semibold flex items-center gap-1.5"
+          >
+            👋 Hand Gestures Guide
+          </Button>
+          <StatChip icon={<Sparkles className="size-3.5 text-[#60e1d5]" />} label="Force XP" value={xp.toLocaleString()} />
+          <StatChip icon={<BadgeCheck className="size-3.5 text-[#ffac88]" />} label="Badges" value={`${progress.badges.length}/4`} />
+        </div>
+      </div>
+
+      {/* Hand Gesture Interactive Prompt Strip */}
+      <div className="rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-3">
+          <span className="text-xl p-1.5 rounded-lg bg-[#02373d] border border-[#00959a]/40">👋</span>
+          <div>
+            <strong className="text-white block">Hand Gesture Controls Active:</strong>
+            <span className="text-[#defcf9]/70">👆 Point to select options • 👍 Thumbs up to submit • 👋 Wave open palm to advance</span>
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setGestureGuideOpen(true)}
+          className="text-xs text-[#60e1d5] hover:text-white shrink-0 font-semibold"
+        >
+          View Gesture Cards →
+        </Button>
+      </div>
+
+      {/* Main Grid View: Left Map, Right Focus Hero Preview */}
+      <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="display-font text-sm font-semibold uppercase tracking-wider text-white">Sector Map</h2>
+            <span className="text-[11px] font-mono text-[#60e1d5]">Select a sector to deploy</span>
+          </div>
+          <GridMap statuses={statuses} badges={progress.badges} onSelect={onSelect} arenaUnlocked={arenaOpen} />
+        </div>
+
+        {/* Right Active Preview */}
+        <div className="space-y-4">
+          <div className="glass-panel relative overflow-hidden rounded-2xl p-6 border border-[#00959a]/50 bg-[#034a52]/60">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[.18em] text-[#60e1d5]">
+                {focusIndex >= 0 ? `Sector 0${focus.number} • ${focus.hero}` : "All sectors restored"}
+              </span>
+              <Flame className="size-4 text-[#ff6164]" />
+            </div>
+
+            <div className="mt-4 flex flex-col sm:flex-row items-center gap-5">
+              <HeroFigure level={focus} compact />
+              <div className="space-y-1 text-center sm:text-left">
+                <h3 className="display-font text-2xl font-bold text-white">{focus.hero}</h3>
+                <p className="text-xs font-semibold text-[#60e1d5]">{focus.title}</p>
+                <p className="mt-2 text-xs leading-relaxed text-[#defcf9]/70">{focus.goal}</p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-1.5">
+              {focus.callouts.map((term) => (
+                <span key={term} className="border border-[#00959a]/40 bg-[#02373d]/80 px-2.5 py-1 text-[10px] font-mono text-[#defcf9]/80 rounded-md">
+                  {term}
+                </span>
+              ))}
+            </div>
+
+            {focusIndex >= 0 ? (
+              <Button onClick={() => onSelect(focusIndex)} className="mt-6 w-full rounded-lg bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold text-xs uppercase tracking-wider py-5 shadow-lg shadow-[#60e1d5]/20">
+                {inProgress >= 0 ? "Resume Mission" : "Deploy into Sector"}
+                <ArrowRight className="size-4 ml-1.5" />
+              </Button>
+            ) : (
+              <Button onClick={() => onSelect(4)} disabled={!arenaOpen} className="mt-6 w-full rounded-lg bg-[#ff6164] text-white hover:bg-[#ff7c6b] font-bold text-xs uppercase tracking-wider py-5">
+                {arenaOpen ? "Enter Final Arena" : "All Sectors Complete"}
+                <ArrowRight className="size-4 ml-1.5" />
+              </Button>
+            )}
+          </div>
+
+          {/* Progress bar */}
+          <div className="p-4 rounded-xl border border-[#034a52] bg-[#034a52]/30 space-y-2">
+            <div className="flex justify-between text-xs font-mono">
+              <span className="text-[#defcf9]/70">Grid Restoration</span>
+              <span className="text-[#60e1d5] font-bold">{restored}%</span>
+            </div>
+            <Progress value={restored} className="h-1.5 bg-[#02373d]" />
+          </div>
+        </div>
+      </div>
+
+      {/* Gesture Guide Modal */}
+      {gestureGuideOpen && (
+        <div className="fixed inset-0 z-50 bg-[#02373d]/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg rounded-2xl border-2 border-[#00959a] bg-[#02373d] p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[#034a52] pb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">👋</span>
+                <h3 className="font-display font-bold text-white text-base">How to Play with Hand Gestures</h3>
+              </div>
+              <button onClick={() => setGestureGuideOpen(false)} className="text-[#defcf9]/60 hover:text-white text-sm">✕</button>
+            </div>
+
+            <div className="space-y-2.5 text-xs">
+              <div className="p-3 rounded-xl border border-[#034a52] bg-[#034a52]/40 flex items-center gap-3">
+                <span className="text-2xl p-1 bg-[#02373d] rounded-lg">👆</span>
+                <div>
+                  <h4 className="font-bold text-white text-sm">1. Point / Index Finger</h4>
+                  <p className="text-[#defcf9]/70">Point up to select option A, B, C, or D (or press keys 1, 2, 3, 4 / click).</p>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-[#034a52] bg-[#034a52]/40 flex items-center gap-3">
+                <span className="text-2xl p-1 bg-[#02373d] rounded-lg">👍</span>
+                <div>
+                  <h4 className="font-bold text-white text-sm">2. Thumbs Up</h4>
+                  <p className="text-[#defcf9]/70">Give a thumbs-up to confirm and lock in your answer.</p>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-[#034a52] bg-[#034a52]/40 flex items-center gap-3">
+                <span className="text-2xl p-1 bg-[#02373d] rounded-lg">👋</span>
+                <div>
+                  <h4 className="font-bold text-white text-sm">3. Open Palm / Wave</h4>
+                  <p className="text-[#defcf9]/70">Wave open palm to proceed to the next question or screen.</p>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl border border-[#034a52] bg-[#034a52]/40 flex items-center gap-3">
+                <span className="text-2xl p-1 bg-[#02373d] rounded-lg">✌️</span>
+                <div>
+                  <h4 className="font-bold text-white text-sm">4. Victory / Two Fingers</h4>
+                  <p className="text-[#defcf9]/70">Hold two fingers to pause or play the sector video briefing.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-right pt-2">
+              <Button onClick={() => setGestureGuideOpen(false)} className="bg-[#60e1d5] text-[#02373d] hover:bg-[#defcf9] font-bold text-xs px-5">
+                Ready to Play!
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
 }
 function completedCountSafe(progress: GameProgress) { return progress.levels.filter((item) => item.status === "complete").length; }
 function StatChip({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="flex items-center gap-2 border border-border bg-card/70 px-3 py-2"><span>{icon}</span><span><span className="block text-[9px] uppercase tracking-[.12em] text-muted-foreground">{label}</span><span className="block text-xs font-bold tabular-nums">{value}</span></span></div>; }
