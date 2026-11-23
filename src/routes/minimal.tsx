@@ -7,6 +7,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { levels, arenaQuestions, type GameLevel, type GameQuestion } from "@/data/game-content";
+import {
+  PointGestureSvg, ThumbsUpGestureSvg, WaveGestureSvg, VictoryGestureSvg
+} from "@/components/gesture-animations";
 
 export const Route = createFileRoute("/minimal")({
   head: () => ({
@@ -539,24 +542,53 @@ export function MinimalGame() {
             </div>
 
             <div className="space-y-3">
-              {GESTURE_CONTROLS.map((g) => (
-                <div
-                  key={g.name}
-                  className="p-3.5 rounded-xl border border-[#034a52] bg-[#034a52]/40 flex items-start gap-3.5"
-                >
-                  <span className="text-2xl shrink-0 p-1 bg-[#02373d] rounded-lg border border-[#00959a]/40">{g.emoji}</span>
-                  <div className="flex-1 space-y-0.5">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-sm text-white">{g.name}</h4>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">
-                        {g.keyboard}
-                      </span>
-                    </div>
-                    <p className="text-xs font-semibold text-[#60e1d5]">{g.action}</p>
-                    <p className="text-[11px] text-[#defcf9]/70">{g.description}</p>
+              <div className="p-3.5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex items-center gap-4">
+                <PointGestureSvg className="size-16 shrink-0" />
+                <div className="space-y-0.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-white text-sm">1. Point / Index Finger</h4>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">Keys 1, 2, 3, 4</span>
                   </div>
+                  <p className="text-xs font-semibold text-[#60e1d5]">Select Option [A, B, C, D]</p>
+                  <p className="text-[11px] text-[#defcf9]/70">Point your index finger up to highlight or click directly on any mission card.</p>
                 </div>
-              ))}
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-[#ff6164]/40 bg-[#034a52]/50 flex items-center gap-4">
+                <ThumbsUpGestureSvg className="size-16 shrink-0" />
+                <div className="space-y-0.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-white text-sm">2. Thumbs Up</h4>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#ff6164] border border-[#ff6164]/40">Enter Key</span>
+                  </div>
+                  <p className="text-xs font-semibold text-[#ff6164]">Confirm & Submit Answer</p>
+                  <p className="text-[11px] text-[#defcf9]/70">Flash a clear thumbs-up gesture to lock in your selected choice.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-[#00959a]/40 bg-[#034a52]/50 flex items-center gap-4">
+                <WaveGestureSvg className="size-16 shrink-0" />
+                <div className="space-y-0.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-white text-sm">3. Open Palm / Wave</h4>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#60e1d5] border border-[#00959a]/40">Space Key</span>
+                  </div>
+                  <p className="text-xs font-semibold text-[#60e1d5]">Next Question or Continue</p>
+                  <p className="text-[11px] text-[#defcf9]/70">Wave open palm sideways to advance seamlessly to the next challenge.</p>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-[#ffac88]/40 bg-[#034a52]/50 flex items-center gap-4">
+                <VictoryGestureSvg className="size-16 shrink-0" />
+                <div className="space-y-0.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-bold text-white text-sm">4. Victory / Peace Sign</h4>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#02373d] text-[#ffac88] border border-[#ffac88]/40">Key [P]</span>
+                  </div>
+                  <p className="text-xs font-semibold text-[#ffac88]">Toggle Video Play / Pause</p>
+                  <p className="text-[11px] text-[#defcf9]/70">Hold two fingers up to pause or resume the tactical briefing video.</p>
+                </div>
+              </div>
             </div>
 
             <div className="p-3.5 rounded-xl bg-[#034a52] border border-[#00959a]/30 text-xs text-[#defcf9]/80 leading-relaxed">
