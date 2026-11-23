@@ -105,6 +105,16 @@ export function InteractiveTitanGuide({
     return voice.subscribe((speaking) => setIsSpeaking(speaking));
   }, []);
 
+  useEffect(() => {
+    // Auto-play the first step intro voice on mount when voiceover is active
+    const timer = setTimeout(() => {
+      if (voiceActive) {
+        voice.speak(current.voiceLine, { character: current.character });
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleStepSelect = (idx: number, playAudio: boolean = true) => {
     setActiveStep(idx);
     const step = GUIDE_STEPS[idx];
@@ -271,8 +281,8 @@ export function InteractiveTitanGuide({
               </button>
             </div>
 
-            {/* Dialogue / Instructional Text */}
-            <p className="text-sm sm:text-base text-[#f2fcfa] leading-relaxed font-medium">
+            {/* Dialogue / Instructional Text with larger font */}
+            <p className="text-base sm:text-lg text-[#f2fcfa] leading-relaxed font-semibold">
               "{current.details}"
             </p>
 
