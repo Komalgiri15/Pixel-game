@@ -23,6 +23,23 @@ export type GameLevel = {
   questions: GameQuestion[];
 };
 
+function deterministicShuffle<T>(array: T[], seedStr: string): T[] {
+  const result = [...array];
+  // Simple deterministic hash based on seedStr to ensure consistent order per question without SSR mismatch
+  let seed = 0;
+  for (let i = 0; i < seedStr.length; i++) {
+    seed = (seed * 31 + seedStr.charCodeAt(i)) & 0xffffffff;
+  }
+  for (let i = result.length - 1; i > 0; i--) {
+    seed = (seed * 1664525 + 1013904223) & 0xffffffff;
+    const j = Math.abs(seed) % (i + 1);
+    const temp = result[i]!;
+    result[i] = result[j]!;
+    result[j] = temp;
+  }
+  return result;
+}
+
 const single = (
   id: string,
   stem: string,
@@ -32,7 +49,7 @@ const single = (
 ): GameQuestion => ({
   id,
   stem,
-  options: [correct, ...distractors],
+  options: deterministicShuffle([correct, ...distractors], id + stem),
   correctAnswers: [correct],
   explanation,
   type: "single",
@@ -121,7 +138,7 @@ export const arenaQuestions: GameQuestion[] = [
   {
     id: "A-01",
     stem: "Company X acquires Y at 0.65 X shares per Y share; X share price $40; Y has 500,000 shares. Cost of acquisition in millions?",
-    options: ["$13.00", "$20.00", "$0.33"],
+    options: ["$20.00", "$13.00", "$0.33"],
     correctAnswers: ["$13.00"],
     explanation: "0.65 × $40 × 500,000 = $13.0M.",
     type: "single",
@@ -129,7 +146,7 @@ export const arenaQuestions: GameQuestion[] = [
   {
     id: "A-02",
     stem: "Which is not a characteristic of M&A deals that earn high returns?",
-    options: ["Relatively high transaction premium", "Strong buyer with earnings/share-price growth above industry average", "Favorable market reaction after announcement"],
+    options: ["Strong buyer with earnings/share-price growth above industry average", "Relatively high transaction premium", "Favorable market reaction after announcement"],
     correctAnswers: ["Relatively high transaction premium"],
     explanation: "The exact answer key identifies a relatively high transaction premium as the choice that is not a characteristic of high-return deals.",
     type: "single",
@@ -137,7 +154,7 @@ export const arenaQuestions: GameQuestion[] = [
   {
     id: "A-03",
     stem: "Which are examples of synergies? I. Closing overlapping facilities II. Cost savings from headcount reduction III. Hiring a new brand marketing team IV. Loss of sales due to overlapping customers.",
-    options: ["I and II", "I and III", "II and IV", "III and IV"],
+    options: ["I and III", "II and IV", "I and II", "III and IV"],
     correctAnswers: ["I and II"],
     explanation: "The answer key identifies closing overlapping facilities and cost savings from headcount reduction as synergies.",
     type: "single",
@@ -145,7 +162,7 @@ export const arenaQuestions: GameQuestion[] = [
   {
     id: "A-04",
     stem: "Which are types of purchase consideration?",
-    options: ["Cash", "Synergies", "Taxes", "Stock"],
+    options: ["Synergies", "Cash", "Taxes", "Stock"],
     correctAnswers: ["Cash", "Stock"],
     explanation: "Cash and Stock are the two correct purchase consideration types in this question.",
     type: "multi",
@@ -153,7 +170,7 @@ export const arenaQuestions: GameQuestion[] = [
   {
     id: "A-05",
     stem: "Most generic and widely used multiples in Precedent Transactions Analysis?",
-    options: ["Enterprise Value-to-Net Income", "Enterprise Value-to-LTM EBITDA", "Offer Price-to-LTM Diluted EPS", "Offer Price-to-LTM EBITDA"],
+    options: ["Enterprise Value-to-Net Income", "Enterprise Value-to-LTM EBITDA", "Offer Price-to-LTM EBITDA", "Offer Price-to-LTM Diluted EPS"],
     correctAnswers: ["Enterprise Value-to-LTM EBITDA", "Offer Price-to-LTM Diluted EPS"],
     explanation: "The two keyed choices are EV-to-LTM EBITDA and Offer Price-to-LTM Diluted EPS.",
     type: "multi",
